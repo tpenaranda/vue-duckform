@@ -14,7 +14,7 @@
       <div class="w-25 small text-right">{{ value.possible_answers[value.possible_answers.length - 1].text }}</div>
     </div>
 
-    <validation-provider rules="required" v-slot="{ errors }" :name="value.text">
+    <validation-provider :rules="{ 'required': value.required }" v-slot="{ errors }" :name="value.text">
       <input type="text" v-model="value.possible_answers_selected[0].data" style="display: none;">
       <p class="text-danger small">{{ errors.join(' ') }}</p>
     </validation-provider>
@@ -66,8 +66,7 @@ export default {
 }
 </script>
 <style lang="scss">
-  @import 'vue-range-slider/dist/vue-range-slider.css';
-
+  @import '~vue-range-slider/dist/vue-range-slider.scss';
   .selection {
     display: flex;
   }

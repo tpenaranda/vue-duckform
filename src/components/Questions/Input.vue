@@ -3,14 +3,14 @@
     <div class="input">
       <validation-provider :rules="rules.join('|')" :name="value.text" v-slot="slotProps">
         <div class="row">
-          <input type="text" :class="{'w-100': value.type !== 'integer'}"
+          <input type="text" class="w-100"
             :disabled="disabled"
             :id="value.possible_answers[0].id"
             :name="`A${value.possible_answers[0].id}`"
             v-model.trim="inputText"
             @input="handleInputChange()"
           >
-          <p v-if="value.possible_answers[0].text" class="label pl-1" style="padding-top: 2px;">[{{ value.possible_answers[0].text }}]</p>
+          <p v-if="value.possible_answers[0].text" class="label pl-1" style="padding-top: 2px; white-space: nowrap;">[{{ value.possible_answers[0].text }}]</p>
         </div>
         <p class="small text-danger mb-0">{{ slotProps.errors.join(' ') }}</p>
       </validation-provider>

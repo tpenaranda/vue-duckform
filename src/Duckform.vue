@@ -4,16 +4,21 @@
       <h1 class="text-center">{{ form.title || 'Loading...' }}</h1>
     </slot>
   </div>
+  <div v-else-if="errorLoading">
+    <slot name="errorLoading" v-bind:form="form">
+      <h1 class="text-center">Ups, there was an error loading the form.</h1>
+    </slot>
+  </div>
   <div v-else class="duckform">
     <validation-observer ref="validationObserver" v-slot="slotProps">
       <main class="content">
-        <slot name="completed" v-if="submit.completed_at" v-bind:survey="form">
+        <slot name="completed" v-if="formSubmitted" v-bind:survey="form">
           <h1 class="text-center">Thanks!</h1>
           <h2 class="text-center">Form was submitted properly.</h2>
         </slot>
         <form v-else ref="surveyTop">
-          <h1 style="font-size: 2em" class="text-center">{{ form.title }}</h1>
-          <ul class="progress list-unstyled">
+          <h1 v-if="form.title" style="font-size: 2em" class="text-center">{{ form.title }}</h1>
+          <ul v-if="!disabled" class="progress list-unstyled">
             <li v-for="(section, index) in form.sections" :class="{'active': index <= currentSectionIndex}"></li>
           </ul>
           <header>
@@ -26,31 +31,31 @@
                 <div class="statement pb-1">{{ question.text }}<span v-if="question.required" class="text-danger small"> *</span></div>
               </header>
               <span v-if="question.type === 'multiselect'">
-                <checkbox-question v-model="currentSection.questions[questionIndex]" :disabled="false"></checkbox-question>
+                <checkbox-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></checkbox-question>
               </span>
               <span v-if="question.type === 'scale'">
-                <scale-question v-model="currentSection.questions[questionIndex]" :disabled="false"></scale-question>
+                <scale-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></scale-question>
               </span>
               <span v-if="question.type === 'date'">
-                <date-question v-model="currentSection.questions[questionIndex]" :disabled="false"></date-question>
+                <date-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></date-question>
               </span>
               <span v-if="['free_text', 'integer'].indexOf(question.type) >= 0">
-                <input-question v-model="currentSection.questions[questionIndex]" :disabled="false"></input-question>
+                <input-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></input-question>
               </span>
               <span v-if="['single_select', 'yes_no'].indexOf(question.type) >= 0">
-                <radio-question v-model="currentSection.questions[questionIndex]" :disabled="false"></radio-question>
+                <radio-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></radio-question>
               </span>
             </fieldset>
           </section>
-          <div class="control">
+          <div v-if="!disabled" class="control">
             <div v-if="validationFailed && slotProps.invalid" class="small text-danger mb-4">
               <p class="pb-2">Please complete the following questions:</p>
               <p v-for="errorText in filterArray(slotProps.errors)">{{ errorText }}.</p>
             </div>
             <button v-if="currentSectionIndex > 0" class="button back" type="button" @click="prevSection">Back</button>
-            <button class="button" type="button" @click="nextSection">
-              <span v-if="currentSectionIndex + 1 < form.sections.length">{{ savingData ? 'Saving...' : 'Continue' }}</span>
-              <span v-else>{{ savingData ? 'Saving...' : 'Submit' }}</span>
+            <button class="button mt-3" type="button" @click="nextSection">
+              <span v-if="isLastSection">{{ savingData ? 'Submitting...' : 'Submit' }}</span>
+              <span v-else>{{ savingData ? 'Saving...' : 'Continue' }}</span>
             </button>
           </div>
         </form>
@@ -58,15 +63,13 @@
     </validation-observer>
   </div>
 </template>
-<script>
-  import _ from 'lodash';
-  import axios from 'axios';
 
-  import InputQuestion from './components/Questions/Input.vue'
-  import RadioQuestion from './components/Questions/Radio.vue'
-  import CheckboxQuestion from './components/Questions/Checkbox.vue'
-  import ScaleQuestion from './components/Questions/Scale.vue'
-  import DateQuestion from './components/Questions/Date.vue'
+<script>
+  import InputQuestion from './components/Questions/Input'
+  import RadioQuestion from './components/Questions/Radio'
+  import CheckboxQuestion from './components/Questions/Checkbox'
+  import ScaleQuestion from './components/Questions/Scale'
+  import DateQuestion from './components/Questions/Date'
 
   import { ValidationObserver } from 'vee-validate';
 
@@ -79,11 +82,11 @@
         form: this.formData,
         formDataLoaded: false,
         formId: null,
+        formSubmitted: false,
         loadingData: true,
         savingData: false,
         submit: this.submitData,
         submitDataLoaded: false,
-        submitId: null,
         validationFailed: false,
       }
     },
@@ -96,12 +99,16 @@
         type: String,
         default: null
       },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
       submitData: {
         type: Object,
         default: () => { return { sections: [] } }
       },
-      submitDataEndpoint: {
-        type: String,
+      submitId: {
+        type: [Number, String],
         default: null
       },
     },
@@ -116,6 +123,9 @@
     computed: {
       currentSection () {
         return this.form.sections[this.currentSectionIndex]
+      },
+      isLastSection () {
+        return this.currentSectionIndex + 1 >= this.form.sections.length
       }
     },
     mounted () {
@@ -126,7 +136,7 @@
         this.getForm()
       }
 
-      if (_.isEmpty(this.submitDataEndpoint)) {
+      if (_.isEmpty(this.submitId)) {
         this.submitDataLoaded = true
       } else {
         this.getSubmit()
@@ -163,8 +173,9 @@
         })
       },
       getSubmit () {
-        axios.get(this.submitDataEndpoint).then(response => {
+        axios.get(`${this.formDataEndpoint}/submits/${this.submitId}`).then(response => {
           this.submit = response.data.data
+          this.formSubmitted = !_.isEmpty(response.data.data.completed_at)
         }).catch(() => {
           this.errorLoading = true
         }).finally(() => {
@@ -220,10 +231,14 @@
         const responseHandler = (response) => {
           this.submit = response.data.data
           this.mergeSubmitData()
+
+          if (this.isLastSection) {
+            this.formSubmitted = !_.isEmpty(response.data.data.completed_at)
+          }
         }
 
-        if (this.submit.id) {
-          return axios.patch(this.submitDataEndpoint, { data: this.form }).then(responseHandler).finally(() => { this.savingData = false })
+        if (this.submit.token) {
+          return axios.patch(`${this.formDataEndpoint}/submits/${this.submit.token}`, { data: this.form }).then(responseHandler).finally(() => { this.savingData = false })
         }
 
         return axios.post(`${this.formDataEndpoint}/submits`, { data: this.form }).then(responseHandler).finally(() => { this.savingData = false })
@@ -234,7 +249,6 @@
 
 <style lang="scss">
   .duckform {
-    background-color: #fff;
     font-size: 1rem;
 
     a {
