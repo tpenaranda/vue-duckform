@@ -22,4 +22,4 @@ if (GlobalVue) {
     GlobalVue.use(plugin);
 }
 
-export default component;
+export default Duckform;

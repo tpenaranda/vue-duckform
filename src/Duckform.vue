@@ -1,80 +1,90 @@
 <template>
-  <div v-if="loadingData">
-    <slot name="loading" v-bind:form="form">
-      <h1 class="text-center">{{ form.title || 'Loading...' }}</h1>
-    </slot>
-  </div>
-  <div v-else-if="errorLoading">
-    <slot name="errorLoading" v-bind:form="form">
-      <h1 class="text-center">Ups, there was an error loading the form.</h1>
-    </slot>
-  </div>
-  <div v-else class="duckform">
-    <validation-observer ref="validationObserver" v-slot="slotProps">
-      <main class="content">
-        <slot name="completed" v-if="formSubmitted" v-bind:survey="form">
-          <h1 class="text-center">Thanks!</h1>
-          <h2 class="text-center">Form was submitted properly.</h2>
-        </slot>
-        <form v-else ref="surveyTop">
-          <h1 v-if="form.title" style="font-size: 2em" class="text-center">{{ form.title }}</h1>
-          <ul v-if="!disabled" class="progress list-unstyled">
-            <li v-for="(section, index) in form.sections" :class="{'active': index <= currentSectionIndex}"></li>
-          </ul>
-          <header>
-            <h2 class="text-center pb-3">{{ currentSection.title }}</h2>
-            <h3 v-if="currentSection.description">{{ currentSection.description }}</h3>
-          </header>
-          <section>
-            <fieldset v-for="(question, questionIndex) in currentSection.questions" :key="`S${currentSectionIndex}|Q${questionIndex}`">
-              <header>
-                <div class="statement pb-1">{{ question.text }}<span v-if="question.required" class="text-danger small"> *</span></div>
-              </header>
-              <span v-if="question.type === 'multiselect'">
-                <checkbox-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></checkbox-question>
-              </span>
-              <span v-if="question.type === 'scale'">
-                <scale-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></scale-question>
-              </span>
-              <span v-if="question.type === 'date'">
-                <date-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></date-question>
-              </span>
-              <span v-if="['free_text', 'integer'].indexOf(question.type) >= 0">
-                <input-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></input-question>
-              </span>
-              <span v-if="['single_select', 'yes_no'].indexOf(question.type) >= 0">
-                <radio-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></radio-question>
-              </span>
-            </fieldset>
-          </section>
-          <div v-if="!disabled" class="control">
-            <div v-if="validationFailed && slotProps.invalid" class="small text-danger mb-4">
-              <p class="pb-2">Please complete the following questions:</p>
-              <p v-for="errorText in filterArray(slotProps.errors)">{{ errorText }}.</p>
+  <div class="duckform">
+    <div v-if="loadingData">
+      <slot name="loading" v-bind:form="form">
+        <h1 class="text-center">{{ form.title || 'Loading...' }}</h1>
+      </slot>
+    </div>
+    <div v-else-if="errorLoading">
+      <slot name="errorLoading" v-bind:form="form">
+        <h1 class="text-center">Ups, there was an error loading the form.</h1>
+      </slot>
+    </div>
+    <div v-else>
+      <validation-observer ref="validationObserver" v-slot="slotProps">
+        <main class="content">
+          <slot name="completed" v-if="formSubmitted" v-bind:survey="form">
+            <h1 class="text-center">Thanks!</h1>
+            <h2 class="text-center">Form was submitted correctly.</h2>
+          </slot>
+          <form v-else ref="surveyTop">
+            <h1 v-if="form.title" style="font-size: 2em" class="text-center">{{ form.title }}</h1>
+            <ul v-if="!disabled" class="progress list-unstyled">
+              <li v-for="(section, index) in form.sections" :class="{'active': index <= currentSectionIndex}"></li>
+            </ul>
+            <header>
+              <h2 class="text-center pb-3">{{ currentSection.title }}</h2>
+              <h3 v-if="currentSection.description">{{ currentSection.description }}</h3>
+            </header>
+            <section>
+              <fieldset v-for="(question, questionIndex) in currentSection.questions" :key="`S${currentSectionIndex}|Q${questionIndex}`">
+                <header>
+                  <div class="statement pb-1">{{ question.text }}<span v-if="question.required" class="text-danger small"> *</span></div>
+                </header>
+                <span v-if="question.type === 'multiselect'">
+                  <checkbox-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></checkbox-question>
+                </span>
+                <span v-if="question.type === 'scale'">
+                  <scale-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></scale-question>
+                </span>
+                <span v-if="question.type === 'date'">
+                  <date-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></date-question>
+                </span>
+                <span v-if="['free_text', 'integer'].indexOf(question.type) >= 0">
+                  <input-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></input-question>
+                </span>
+                <span v-if="['single_select', 'yes_no'].indexOf(question.type) >= 0">
+                  <radio-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></radio-question>
+                </span>
+              </fieldset>
+            </section>
+            <div v-if="!disabled" class="control">
+              <div v-if="validationFailed && slotProps.invalid" class="small text-danger mb-4">
+                <p class="pb-2">Please complete the following questions:</p>
+                <p v-for="errorText in filterArray(slotProps.errors)">{{ errorText }}.</p>
+              </div>
+              <button v-if="currentSectionIndex > 0" class="button back" type="button" @click="prevSection">Back</button>
+              <button class="button mt-3" type="button" @click="nextSection">
+                <span v-if="isLastSection">{{ savingData ? 'Submitting...' : 'Submit' }}</span>
+                <span v-else>{{ savingData ? 'Saving...' : 'Continue' }}</span>
+              </button>
             </div>
-            <button v-if="currentSectionIndex > 0" class="button back" type="button" @click="prevSection">Back</button>
-            <button class="button mt-3" type="button" @click="nextSection">
-              <span v-if="isLastSection">{{ savingData ? 'Submitting...' : 'Submit' }}</span>
-              <span v-else>{{ savingData ? 'Saving...' : 'Continue' }}</span>
-            </button>
-          </div>
-        </form>
-      </main>
-    </validation-observer>
+          </form>
+        </main>
+      </validation-observer>
+    </div>
   </div>
 </template>
 
 <script>
-  import InputQuestion from './components/Questions/Input'
-  import RadioQuestion from './components/Questions/Radio'
-  import CheckboxQuestion from './components/Questions/Checkbox'
-  import ScaleQuestion from './components/Questions/Scale'
-  import DateQuestion from './components/Questions/Date'
+  import InputQuestion from './components/Questions/Input.vue'
+  import RadioQuestion from './components/Questions/Radio.vue'
+  import CheckboxQuestion from './components/Questions/Checkbox.vue'
+  import ScaleQuestion from './components/Questions/Scale.vue'
+  import DateQuestion from './components/Questions/Date.vue'
 
-  import { ValidationObserver } from 'vee-validate';
+  import { ValidationObserver } from 'vee-validate'
 
   export default {
     name: 'Duckform',
+    components: {
+      CheckboxQuestion,
+      DateQuestion,
+      InputQuestion,
+      RadioQuestion,
+      ScaleQuestion,
+      ValidationObserver
+    },
     data () {
       return {
         currentSectionIndex: 0,
@@ -112,14 +122,6 @@
         default: null
       },
     },
-    components: {
-      CheckboxQuestion,
-      DateQuestion,
-      InputQuestion,
-      RadioQuestion,
-      ScaleQuestion,
-      ValidationObserver
-    },
     computed: {
       currentSection () {
         return this.form.sections[this.currentSectionIndex]
@@ -131,29 +133,11 @@
     mounted () {
       if (_.isEmpty(this.formDataEndpoint)) {
         this.proccessFormSections()
-        this.formDataLoaded = true
+        this.getSubmitAndMerge().then(() => { this.loadingData = false })
       } else {
-        this.getForm()
-      }
-
-      if (_.isEmpty(this.submitId)) {
-        this.submitDataLoaded = true
-      } else {
-        this.getSubmit()
-      }
-    },
-    watch: {
-      formDataLoaded: function (newValue, oldValue) {
-        if (this.formDataLoaded && this.submitDataLoaded) {
-          this.mergeSubmitData()
-          this.loadingData = false
-        }
-      },
-      submitDataLoaded: function (newValue, oldValue) {
-        if (this.formDataLoaded && this.submitDataLoaded) {
-          this.mergeSubmitData()
-          this.loadingData = false
-        }
+        this.getForm().then(() => {
+          this.getSubmitAndMerge().then(() => { this.loadingData = false })
+        })
       }
     },
     methods: {
@@ -163,7 +147,7 @@
         return Object.keys(errors).filter((v, k) => errorIndexes.indexOf(k) >= 0)
       },
       getForm () {
-        axios.get(this.formDataEndpoint).then(response => {
+        return axios.get(this.formDataEndpoint).then(response => {
           this.form = response.data.data
           this.proccessFormSections()
         }).catch(() => {
@@ -173,7 +157,7 @@
         })
       },
       getSubmit () {
-        axios.get(`${this.formDataEndpoint}/submits/${this.submitId}`).then(response => {
+        return axios.get(`${this.formDataEndpoint}/submits/${this.submitId}`).then(response => {
           this.submit = response.data.data
           this.formSubmitted = !_.isEmpty(response.data.data.completed_at)
         }).catch(() => {
@@ -181,6 +165,14 @@
         }).finally(() => {
           this.submitDataLoaded = true
         })
+      },
+      getSubmitAndMerge () {
+        if (_.isEmpty(this.submitId)) {
+          this.mergeSubmitData()
+          return new Promise((resolve) => resolve())
+        } else {
+          return this.getSubmit().then(() => this.mergeSubmitData())
+        }
       },
       proccessFormSections () {
         this.form.sections = _.sortBy(this.form.sections, (i) => i.order || 0).map((section) => {

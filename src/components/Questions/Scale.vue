@@ -27,6 +27,8 @@ import RangeSlider from 'vue-range-slider'
 import { integer, required } from 'vee-validate/dist/rules'
 import { ValidationProvider, extend } from 'vee-validate'
 
+import 'vue-range-slider/dist/vue-range-slider.css'
+
 extend('required', {
   ...required,
   message: 'Field is required.'
@@ -66,7 +68,6 @@ export default {
 }
 </script>
 <style lang="scss">
-  @import '~vue-range-slider/dist/vue-range-slider.scss';
   .selection {
     display: flex;
   }

@@ -37,6 +37,7 @@ export default {
         'vee-validate/dist/rules',
         'vue-date-pick',
         'vue-date-pick/dist/vueDatePick.css',
-        'vue-range-slider'
+        'vue-range-slider',
+        'vue-range-slider/dist/vue-range-slider.css'
     ]
 };
