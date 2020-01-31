@@ -1,6 +1,6 @@
 {
   "name": "vue-duckform",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "VueJS package to render a JS Object as a Form (Radio buttons, Checkboxes, Text Input, Scale Slider and Calendar input). Compatible with Laravel Duckform API.",
   "main": "dist/vue-duckform.umd.js",
   "module": "dist/vue-duckform.esm.js",
@@ -37,8 +37,8 @@
     "gulp-babel": "^8.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.2",
-    "rollup": "^1.17.0",
-    "rollup-plugin-vue": "^5.0.1",
+    "rollup": "^1.30.1",
+    "rollup-plugin-vue": "^5.1.6",
     "vue-template-compiler": "^2.6.10"
   },
   "bugs": {
@@ -53,12 +53,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "^0.19.1",
+    "axios": "^0.19.2",
     "lodash": "^4.17.13",
     "moment": "^2.24.0",
+    "vee-validate": "^3.2.2",
     "vue": "^2.0.0",
     "vue-date-pick": "^1.2.1",
-    "vue-range-slider": "^0.6.0",
-    "vee-validate": "^3.2.1"
+    "vue-range-slider": "^0.6.0"
   }
 }

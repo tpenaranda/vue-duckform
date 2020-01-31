@@ -73,6 +73,8 @@
   import ScaleQuestion from './components/Questions/Scale.vue'
   import DateQuestion from './components/Questions/Date.vue'
 
+  import axios from 'axios'
+  import _ from 'lodash'
   import { ValidationObserver } from 'vee-validate'
 
   export default {

@@ -4,7 +4,9 @@ export function install(Vue) {
     if (install.installed) {
         return;
     }
+
     install.installed = true;
+
     Vue.component('Duckform', Duckform);
 }
 
