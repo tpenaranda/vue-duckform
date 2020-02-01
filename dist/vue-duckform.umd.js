@@ -396,19 +396,23 @@
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.selectedAnswerId,
-                        expression: "selectedAnswerId"
+                        value: _vm.value.possible_answers_selected,
+                        expression: "value.possible_answers_selected"
                       }
                     ],
                     staticStyle: { display: "none" },
                     attrs: { type: "text" },
-                    domProps: { value: _vm.selectedAnswerId },
+                    domProps: { value: _vm.value.possible_answers_selected },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.selectedAnswerId = $event.target.value;
+                        _vm.$set(
+                          _vm.value,
+                          "possible_answers_selected",
+                          $event.target.value
+                        );
                       }
                     }
                   }),
@@ -431,11 +435,11 @@
     /* style */
     var __vue_inject_styles__$1 = function (inject) {
       if (!inject) { return }
-      inject("data-v-24a7523b_0", { source: ".selector[data-v-24a7523b] {\n  display: inline-block;\n}\n.selector input[data-v-24a7523b] {\n  display: none;\n}\n.selector .marker[data-v-24a7523b] {\n  align-items: center;\n  border-radius: 19px;\n  border: 1px solid #adc0c480;\n  display: flex;\n  height: 19px;\n  justify-content: center;\n  position: relative;\n  transition-duration: 0.4s;\n  width: 19px;\n}\n.selector input:checked ~ .marker[data-v-24a7523b] {\n  background-color: #8ec0ed;\n  border-color: #8ec0ed;\n}\n.selector label:hover .marker[data-v-24a7523b] {\n  border-color: #adc0c4;\n}\n\n/*# sourceMappingURL=Radio.vue.map */", map: {"version":3,"sources":["/home/tate/vue-duckform/src/components/Questions/Radio.vue","Radio.vue"],"names":[],"mappings":"AAoEA;EACA,qBAAA;ACnEA;ADqEA;EACA,aAAA;ACnEA;ADsEA;EACA,mBAAA;EACA,mBAXA;EAYA,2BAAA;EACA,aAAA;EACA,YAdA;EAeA,uBAAA;EACA,kBAAA;EACA,yBAAA;EACA,WAlBA;AClDA;ADsEA;EACA,yBAAA;EACA,qBAAA;ACpEA;ADuEA;EACA,qBAAA;ACrEA;;AAEA,oCAAoC","file":"Radio.vue","sourcesContent":["<template>\n  <ul class=\"list-unstyled options mb-2\" :class=\"`_${value.type}`\">\n    <li v-for=\"(answer, answerIndex) in value.possible_answers\" :key=\"answer.id\">\n      <label class=\"row\">\n        <div class=\"selector py-1\">\n          <input type=\"radio\"\n            :disabled=\"disabled\"\n            :id=\"`A${answer.id}`\"\n            :name=\"`Q${value.id}`\"\n            @change=\"handleInputChange(answer.id)\"\n            :checked=\"selectedAnswerId === answer.id\"\n          >\n          <span class=\"radio marker\"></span>\n        </div>\n        <span class=\"label pl-2 py-1\">{{ answer.text }}</span>\n      </label>\n    </li>\n    <validation-provider :rules=\"rules\" v-slot=\"{ errors }\" :name=\"value.text\">\n      <input type=\"text\" v-model=\"selectedAnswerId\" style=\"display: none;\">\n      <p class=\"text-danger small\">{{ errors.join(' ') }}</p>\n    </validation-provider>\n  </ul>\n</template>\n\n<script>\n  import { required } from 'vee-validate/dist/rules'\n  import { ValidationProvider, extend } from 'vee-validate'\n\n  extend('required', {\n    ...required,\n    message: 'Field is required.'\n  })\n\n  export default {\n    components: { ValidationProvider },\n    props: {\n      disabled: {\n        type: Boolean,\n        default: false\n      },\n      value: {\n        type: Object,\n        default: () => { return { possible_answers: [], possible_answers_selected: [] } }\n      },\n    },\n    computed: {\n      rules () {\n        return this.value.required ? 'required' : null\n      },\n      selectedAnswerId () {\n        if (!this.value.possible_answers_selected[0]) {\n          return null\n        }\n\n        return this.value.possible_answers_selected[0].id\n      }\n    },\n    methods: {\n      handleInputChange (id) {\n        return this.value.possible_answers_selected = [{id: id, data: null}]\n      }\n    }\n  }\n</script>\n\n<style lang=\"scss\" scoped>\n  $marker-size: 19px;\n\n  .selector {\n    display: inline-block;\n\n    input {\n      display: none;\n    }\n\n    .marker {\n      align-items: center;\n      border-radius: $marker-size;\n      border: 1px solid #adc0c480;\n      display: flex;\n      height: $marker-size;\n      justify-content: center;\n      position: relative;\n      transition-duration: .4s;\n      width: $marker-size;\n    }\n    input:checked ~ .marker {\n      background-color: #8ec0ed;\n      border-color: #8ec0ed;\n    }\n    label:hover {\n      .marker {\n        border-color: #adc0c4;\n      }\n    }\n  }\n</style>\n",".selector {\n  display: inline-block;\n}\n.selector input {\n  display: none;\n}\n.selector .marker {\n  align-items: center;\n  border-radius: 19px;\n  border: 1px solid #adc0c480;\n  display: flex;\n  height: 19px;\n  justify-content: center;\n  position: relative;\n  transition-duration: 0.4s;\n  width: 19px;\n}\n.selector input:checked ~ .marker {\n  background-color: #8ec0ed;\n  border-color: #8ec0ed;\n}\n.selector label:hover .marker {\n  border-color: #adc0c4;\n}\n\n/*# sourceMappingURL=Radio.vue.map */"]}, media: undefined });
+      inject("data-v-4a7cf1bd_0", { source: ".selector[data-v-4a7cf1bd] {\n  display: inline-block;\n}\n.selector input[data-v-4a7cf1bd] {\n  display: none;\n}\n.selector .marker[data-v-4a7cf1bd] {\n  align-items: center;\n  border-radius: 19px;\n  border: 1px solid #adc0c480;\n  display: flex;\n  height: 19px;\n  justify-content: center;\n  position: relative;\n  transition-duration: 0.4s;\n  width: 19px;\n}\n.selector input:checked ~ .marker[data-v-4a7cf1bd] {\n  background-color: #8ec0ed;\n  border-color: #8ec0ed;\n}\n.selector label:hover .marker[data-v-4a7cf1bd] {\n  border-color: #adc0c4;\n}\n\n/*# sourceMappingURL=Radio.vue.map */", map: {"version":3,"sources":["/home/tate/vue-duckform/src/components/Questions/Radio.vue","Radio.vue"],"names":[],"mappings":"AAoEA;EACA,qBAAA;ACnEA;ADqEA;EACA,aAAA;ACnEA;ADsEA;EACA,mBAAA;EACA,mBAXA;EAYA,2BAAA;EACA,aAAA;EACA,YAdA;EAeA,uBAAA;EACA,kBAAA;EACA,yBAAA;EACA,WAlBA;AClDA;ADsEA;EACA,yBAAA;EACA,qBAAA;ACpEA;ADuEA;EACA,qBAAA;ACrEA;;AAEA,oCAAoC","file":"Radio.vue","sourcesContent":["<template>\n  <ul class=\"list-unstyled options mb-2\" :class=\"`_${value.type}`\">\n    <li v-for=\"(answer, answerIndex) in value.possible_answers\" :key=\"answer.id\">\n      <label class=\"row\">\n        <div class=\"selector py-1\">\n          <input type=\"radio\"\n            :disabled=\"disabled\"\n            :id=\"`A${answer.id}`\"\n            :name=\"`Q${value.id}`\"\n            @change=\"handleInputChange(answer.id)\"\n            :checked=\"selectedAnswerId === answer.id\"\n          >\n          <span class=\"radio marker\"></span>\n        </div>\n        <span class=\"label pl-2 py-1\">{{ answer.text }}</span>\n      </label>\n    </li>\n    <validation-provider :rules=\"rules\" v-slot=\"{ errors }\" :name=\"value.text\">\n      <input type=\"text\" v-model=\"value.possible_answers_selected\" style=\"display: none;\">\n      <p class=\"text-danger small\">{{ errors.join(' ') }}</p>\n    </validation-provider>\n  </ul>\n</template>\n\n<script>\n  import { required } from 'vee-validate/dist/rules'\n  import { ValidationProvider, extend } from 'vee-validate'\n\n  extend('required', {\n    ...required,\n    message: 'Field is required.'\n  })\n\n  export default {\n    components: { ValidationProvider },\n    props: {\n      disabled: {\n        type: Boolean,\n        default: false\n      },\n      value: {\n        type: Object,\n        default: () => { return { possible_answers: [], possible_answers_selected: [] } }\n      },\n    },\n    computed: {\n      rules () {\n        return this.value.required ? 'required' : null\n      },\n      selectedAnswerId () {\n        if (!this.value.possible_answers_selected[0]) {\n          return null\n        }\n\n        return this.value.possible_answers_selected[0].id\n      }\n    },\n    methods: {\n      handleInputChange (id) {\n        return this.value.possible_answers_selected = [{id: id, data: null}]\n      }\n    }\n  }\n</script>\n\n<style lang=\"scss\" scoped>\n  $marker-size: 19px;\n\n  .selector {\n    display: inline-block;\n\n    input {\n      display: none;\n    }\n\n    .marker {\n      align-items: center;\n      border-radius: $marker-size;\n      border: 1px solid #adc0c480;\n      display: flex;\n      height: $marker-size;\n      justify-content: center;\n      position: relative;\n      transition-duration: .4s;\n      width: $marker-size;\n    }\n    input:checked ~ .marker {\n      background-color: #8ec0ed;\n      border-color: #8ec0ed;\n    }\n    label:hover {\n      .marker {\n        border-color: #adc0c4;\n      }\n    }\n  }\n</style>\n",".selector {\n  display: inline-block;\n}\n.selector input {\n  display: none;\n}\n.selector .marker {\n  align-items: center;\n  border-radius: 19px;\n  border: 1px solid #adc0c480;\n  display: flex;\n  height: 19px;\n  justify-content: center;\n  position: relative;\n  transition-duration: 0.4s;\n  width: 19px;\n}\n.selector input:checked ~ .marker {\n  background-color: #8ec0ed;\n  border-color: #8ec0ed;\n}\n.selector label:hover .marker {\n  border-color: #adc0c4;\n}\n\n/*# sourceMappingURL=Radio.vue.map */"]}, media: undefined });
 
     };
     /* scoped */
-    var __vue_scope_id__$1 = "data-v-24a7523b";
+    var __vue_scope_id__$1 = "data-v-4a7cf1bd";
     /* module identifier */
     var __vue_module_identifier__$1 = undefined;
     /* functional template */
@@ -959,7 +963,7 @@
         _c("validation-provider", {
           ref: "validationProvider",
           attrs: {
-            rules: { required: true, regex: /^\d{2}-\d{2}-\d{4}$/ },
+            rules: { required: _vm.value.required, regex: /^\d{2}-\d{2}-\d{4}$/ },
             name: _vm.value.text
           },
           scopedSlots: _vm._u([
@@ -1008,7 +1012,7 @@
     /* style */
     var __vue_inject_styles__$4 = function (inject) {
       if (!inject) { return }
-      inject("data-v-5fd549ed_0", { source: ".vdpClearInput {\n  display: none;\n}\n.vdpCellContent {\n  font-size: 13px;\n}\n.vdpComponent {\n  width: 100%;\n}\n.vdpComponent input {\n  font-size: 16px;\n  width: 100%;\n}\n\n/*# sourceMappingURL=Date.vue.map */", map: {"version":3,"sources":["/home/tate/vue-duckform/src/components/Questions/Date.vue","Date.vue"],"names":[],"mappings":"AAmEA;EACA,aAAA;AClEA;ADoEA;EACA,eAAA;ACjEA;ADmEA;EACA,WAAA;AChEA;ADkEA;EACA,eAAA;EACA,WAAA;AChEA;;AAEA,mCAAmC","file":"Date.vue","sourcesContent":["<template>\n  <div class=\"input\">\n    <validation-provider ref=\"validationProvider\" :rules=\"{ required: true, regex: /^\\d{2}-\\d{2}-\\d{4}$/ }\" v-slot=\"{ errors }\" :name=\"value.text\" >\n      <date-pick ref=\"datePicker\"\n        v-model=\"value.possible_answers_selected[0].data\"\n        :isDateDisabled=\"isFutureDate\"\n        :inputAttributes=\"{readonly: false}\"\n        :editable=\"!disabled\"\n        format=\"MM-DD-YYYY\"\n        @change=\"dateSelected\">\n      </date-pick>\n      <p class=\"text-danger small\">{{ errors.join(' ') }}</p>\n    </validation-provider>\n  </div>\n</template>\n\n<script>\nimport 'vue-date-pick/dist/vueDatePick.css';\nimport DatePick from 'vue-date-pick';\nimport moment from 'moment';\n\nimport { regex, required } from 'vee-validate/dist/rules'\nimport { ValidationProvider, extend } from 'vee-validate'\n\nextend('regex', {\n  ...regex,\n  message: \"Field must match the 'MM-DD-YYYY' pattern.\"\n})\n\nextend('required', {\n  ...required,\n  message: 'Field is required.'\n})\n\nexport default {\n  components: {\n    DatePick,\n    ValidationProvider\n  },\n  props: {\n    disabled: {\n      type: Boolean,\n      default: false\n    },\n    value: {\n      type: Object,\n      default: () => { return { possible_answers: [{}], possible_answers_selected: [] } }\n    },\n  },\n  created () {\n    if (!this.value.possible_answers_selected[0]) {\n      this.value.possible_answers_selected = [{ id: this.value.possible_answers[0].id, data: null }]\n    }\n  },\n  methods: {\n    isFutureDate (date) {\n      return moment(date).isAfter(moment().subtract(1, 'day'))\n    },\n    dateSelected(date) {\n      this.$refs.validationProvider.validate()\n      this.value.possible_answers_selected = [{ id: this.value.possible_answers[0].id, data: date }]\n    }\n  }\n}\n</script>\n\n<style lang=\"scss\">\n  .vdpClearInput {\n    display: none;\n  }\n  .vdpCellContent {\n    font-size: 13px;\n  }\n  .vdpComponent {\n    width: 100%;\n\n    input {\n      font-size: 16px;\n      width: 100%;\n    }\n  }\n</style>\n",".vdpClearInput {\n  display: none;\n}\n\n.vdpCellContent {\n  font-size: 13px;\n}\n\n.vdpComponent {\n  width: 100%;\n}\n.vdpComponent input {\n  font-size: 16px;\n  width: 100%;\n}\n\n/*# sourceMappingURL=Date.vue.map */"]}, media: undefined });
+      inject("data-v-5d7dab4a_0", { source: ".vdpClearInput {\n  display: none;\n}\n.vdpCellContent {\n  font-size: 13px;\n}\n.vdpComponent {\n  width: 100%;\n}\n.vdpComponent input {\n  font-size: 16px;\n  width: 100%;\n}\n\n/*# sourceMappingURL=Date.vue.map */", map: {"version":3,"sources":["/home/tate/vue-duckform/src/components/Questions/Date.vue","Date.vue"],"names":[],"mappings":"AAmEA;EACA,aAAA;AClEA;ADoEA;EACA,eAAA;ACjEA;ADmEA;EACA,WAAA;AChEA;ADkEA;EACA,eAAA;EACA,WAAA;AChEA;;AAEA,mCAAmC","file":"Date.vue","sourcesContent":["<template>\n  <div class=\"input\">\n    <validation-provider ref=\"validationProvider\" :rules=\"{ required: value.required, regex: /^\\d{2}-\\d{2}-\\d{4}$/ }\" v-slot=\"{ errors }\" :name=\"value.text\" >\n      <date-pick ref=\"datePicker\"\n        v-model=\"value.possible_answers_selected[0].data\"\n        :isDateDisabled=\"isFutureDate\"\n        :inputAttributes=\"{readonly: false}\"\n        :editable=\"!disabled\"\n        format=\"MM-DD-YYYY\"\n        @change=\"dateSelected\">\n      </date-pick>\n      <p class=\"text-danger small\">{{ errors.join(' ') }}</p>\n    </validation-provider>\n  </div>\n</template>\n\n<script>\nimport 'vue-date-pick/dist/vueDatePick.css';\nimport DatePick from 'vue-date-pick';\nimport moment from 'moment';\n\nimport { regex, required } from 'vee-validate/dist/rules'\nimport { ValidationProvider, extend } from 'vee-validate'\n\nextend('regex', {\n  ...regex,\n  message: \"Field must match the 'MM-DD-YYYY' pattern.\"\n})\n\nextend('required', {\n  ...required,\n  message: 'Field is required.'\n})\n\nexport default {\n  components: {\n    DatePick,\n    ValidationProvider\n  },\n  props: {\n    disabled: {\n      type: Boolean,\n      default: false\n    },\n    value: {\n      type: Object,\n      default: () => { return { possible_answers: [{}], possible_answers_selected: [] } }\n    },\n  },\n  created () {\n    if (!this.value.possible_answers_selected[0]) {\n      this.value.possible_answers_selected = [{ id: this.value.possible_answers[0].id, data: null }]\n    }\n  },\n  methods: {\n    isFutureDate (date) {\n      return moment(date).isAfter(moment().subtract(1, 'day'))\n    },\n    dateSelected(date) {\n      this.$refs.validationProvider.validate()\n      this.value.possible_answers_selected = [{ id: this.value.possible_answers[0].id, data: date }]\n    }\n  }\n}\n</script>\n\n<style lang=\"scss\">\n  .vdpClearInput {\n    display: none;\n  }\n  .vdpCellContent {\n    font-size: 13px;\n  }\n  .vdpComponent {\n    width: 100%;\n\n    input {\n      font-size: 16px;\n      width: 100%;\n    }\n  }\n</style>\n",".vdpClearInput {\n  display: none;\n}\n\n.vdpCellContent {\n  font-size: 13px;\n}\n\n.vdpComponent {\n  width: 100%;\n}\n.vdpComponent input {\n  font-size: 16px;\n  width: 100%;\n}\n\n/*# sourceMappingURL=Date.vue.map */"]}, media: undefined });
 
     };
     /* scoped */
@@ -1066,7 +1070,7 @@
     props: {
       formData: {
         type: Object,
-        default: function () { return { sections: [] } }
+        default: function () { return {} }
       },
       formDataEndpoint: {
         type: String,
@@ -1078,11 +1082,15 @@
       },
       submitData: {
         type: Object,
-        default: function () { return { sections: [] } }
+        default: function () { return {} }
       },
       submitId: {
         type: [Number, String],
         default: null
+      },
+      value: {
+        type: Object,
+        default: function () { return {} }
       },
     },
     computed: {
@@ -1149,15 +1157,20 @@
         var this$1 = this;
 
         this.form.sections = _.sortBy(this.form.sections, function (i) { return i.order || 0; }).map(function (section) {
-          section.questions.map(function (question) {
-            question.possible_answers = _.sortBy(question.possible_answers, function (i) { return i.order || 0; });
-            this$1.$set(question, 'possible_answers_selected', []);
-            return question
-          });
+          if (section.questions) {
+            section.questions.map(function (question) {
+              question.possible_answers = _.sortBy(question.possible_answers, function (i) { return i.order || 0; });
+              this$1.$set(question, 'possible_answers_selected', []);
+              return question
+            });
+          }
           return section
         });
       },
       mergeSubmitData: function mergeSubmitData() {
+        if (!this.submit.sections || !this.submit.sections.length) {
+          return null
+        }
         var savedSectionsArranged = _.keyBy(this.submit.sections.map(function (section) {
           section.questions = _.keyBy(section.questions, 'id');
           return section
@@ -1184,6 +1197,9 @@
               this$1.currentSectionIndex++;
               this$1.$refs.surveyTop.scrollIntoView();
             }
+          }).finally(function () {
+            this$1.$emit('input', this$1.form);
+            this$1.$emit('save');
           });
         });
       },
@@ -1193,7 +1209,7 @@
           this.$refs.surveyTop.scrollIntoView();
         }
       },
-      save: function save () {
+      saveToApi: function saveToApi () {
         var this$1 = this;
 
         this.savingData = true;
@@ -1207,10 +1223,25 @@
         };
 
         if (this.submit.token) {
-          return axios.patch(((this.formDataEndpoint) + "/submits/" + (this.submit.token)), { data: this.form }).then(responseHandler).finally(function () { this$1.savingData = false; })
+          return axios.patch(((this.formDataEndpoint) + "/submits/" + (this.submit.token)), { data: this.form }).then(responseHandler).finally(function () {
+            this$1.savingData = false;
+          })
         }
 
-        return axios.post(((this.formDataEndpoint) + "/submits"), { data: this.form }).then(responseHandler).finally(function () { this$1.savingData = false; })
+        return axios.post(((this.formDataEndpoint) + "/submits"), { data: this.form }).then(responseHandler).finally(function () {
+          this$1.savingData = false;
+        })
+      },
+      save: function save () {
+        if (!_.isEmpty(this.formDataEndpoint)) {
+          return this.saveToApi()
+        }
+
+        if (this.isLastSection) {
+          this.formSubmitted = true;
+        }
+
+        return new Promise(function (resolve) { return resolve(); })
       }
     }
   };
@@ -1256,6 +1287,12 @@
             ],
             2
           )
+        : !_vm.form.sections || !_vm.form.sections.length
+        ? _c("div", [
+            _c("h1", { staticClass: "text-center" }, [
+              _vm._v("There are no sections defined on this form.")
+            ])
+          ])
         : _c(
             "div",
             [
@@ -1336,217 +1373,245 @@
                                         : _vm._e()
                                     ]),
                                     _vm._v(" "),
-                                    _c(
-                                      "section",
-                                      _vm._l(
-                                        _vm.currentSection.questions,
-                                        function(question, questionIndex) {
-                                          return _c(
-                                            "fieldset",
-                                            {
-                                              key:
-                                                "S" +
-                                                _vm.currentSectionIndex +
-                                                "|Q" +
-                                                questionIndex
-                                            },
-                                            [
-                                              _c("header", [
-                                                _c(
-                                                  "div",
-                                                  {
-                                                    staticClass: "statement pb-1"
-                                                  },
+                                    _vm.currentSection.questions &&
+                                    _vm.currentSection.questions.length
+                                      ? _c(
+                                          "section",
+                                          _vm._l(
+                                            _vm.currentSection.questions,
+                                            function(question, questionIndex) {
+                                              return _c(
+                                                "fieldset",
+                                                {
+                                                  key:
+                                                    "S" +
+                                                    _vm.currentSectionIndex +
+                                                    "|Q" +
+                                                    questionIndex
+                                                },
+                                                [
+                                                  _c("header", [
+                                                    _c(
+                                                      "div",
+                                                      {
+                                                        staticClass:
+                                                          "statement pb-1"
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          _vm._s(question.text)
+                                                        ),
+                                                        question.required
+                                                          ? _c(
+                                                              "span",
+                                                              {
+                                                                staticClass:
+                                                                  "text-danger small"
+                                                              },
+                                                              [_vm._v(" *")]
+                                                            )
+                                                          : _vm._e()
+                                                      ]
+                                                    )
+                                                  ]),
+                                                  _vm._v(" "),
+                                                  question.type === "multiselect"
+                                                    ? _c(
+                                                        "span",
+                                                        [
+                                                          _c(
+                                                            "checkbox-question",
+                                                            {
+                                                              attrs: {
+                                                                disabled:
+                                                                  _vm.disabled
+                                                              },
+                                                              model: {
+                                                                value:
+                                                                  _vm
+                                                                    .currentSection
+                                                                    .questions[
+                                                                    questionIndex
+                                                                  ],
+                                                                callback: function(
+                                                                  $$v
+                                                                ) {
+                                                                  _vm.$set(
+                                                                    _vm
+                                                                      .currentSection
+                                                                      .questions,
+                                                                    questionIndex,
+                                                                    $$v
+                                                                  );
+                                                                },
+                                                                expression:
+                                                                  "currentSection.questions[questionIndex]"
+                                                              }
+                                                            }
+                                                          )
+                                                        ],
+                                                        1
+                                                      )
+                                                    : _vm._e(),
+                                                  _vm._v(" "),
+                                                  question.type === "scale"
+                                                    ? _c(
+                                                        "span",
+                                                        [
+                                                          _c("scale-question", {
+                                                            attrs: {
+                                                              disabled:
+                                                                _vm.disabled
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.currentSection
+                                                                  .questions[
+                                                                  questionIndex
+                                                                ],
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm
+                                                                    .currentSection
+                                                                    .questions,
+                                                                  questionIndex,
+                                                                  $$v
+                                                                );
+                                                              },
+                                                              expression:
+                                                                "currentSection.questions[questionIndex]"
+                                                            }
+                                                          })
+                                                        ],
+                                                        1
+                                                      )
+                                                    : _vm._e(),
+                                                  _vm._v(" "),
+                                                  question.type === "date"
+                                                    ? _c(
+                                                        "span",
+                                                        [
+                                                          _c("date-question", {
+                                                            attrs: {
+                                                              disabled:
+                                                                _vm.disabled
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.currentSection
+                                                                  .questions[
+                                                                  questionIndex
+                                                                ],
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm
+                                                                    .currentSection
+                                                                    .questions,
+                                                                  questionIndex,
+                                                                  $$v
+                                                                );
+                                                              },
+                                                              expression:
+                                                                "currentSection.questions[questionIndex]"
+                                                            }
+                                                          })
+                                                        ],
+                                                        1
+                                                      )
+                                                    : _vm._e(),
+                                                  _vm._v(" "),
                                                   [
-                                                    _vm._v(_vm._s(question.text)),
-                                                    question.required
-                                                      ? _c(
-                                                          "span",
-                                                          {
-                                                            staticClass:
-                                                              "text-danger small"
-                                                          },
-                                                          [_vm._v(" *")]
-                                                        )
-                                                      : _vm._e()
-                                                  ]
-                                                )
-                                              ]),
-                                              _vm._v(" "),
-                                              question.type === "multiselect"
-                                                ? _c(
-                                                    "span",
-                                                    [
-                                                      _c("checkbox-question", {
-                                                        attrs: {
-                                                          disabled: _vm.disabled
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.currentSection
-                                                              .questions[
-                                                              questionIndex
-                                                            ],
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.currentSection
-                                                                .questions,
-                                                              questionIndex,
-                                                              $$v
-                                                            );
-                                                          },
-                                                          expression:
-                                                            "currentSection.questions[questionIndex]"
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  )
-                                                : _vm._e(),
-                                              _vm._v(" "),
-                                              question.type === "scale"
-                                                ? _c(
-                                                    "span",
-                                                    [
-                                                      _c("scale-question", {
-                                                        attrs: {
-                                                          disabled: _vm.disabled
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.currentSection
-                                                              .questions[
-                                                              questionIndex
-                                                            ],
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.currentSection
-                                                                .questions,
-                                                              questionIndex,
-                                                              $$v
-                                                            );
-                                                          },
-                                                          expression:
-                                                            "currentSection.questions[questionIndex]"
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  )
-                                                : _vm._e(),
-                                              _vm._v(" "),
-                                              question.type === "date"
-                                                ? _c(
-                                                    "span",
-                                                    [
-                                                      _c("date-question", {
-                                                        attrs: {
-                                                          disabled: _vm.disabled
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.currentSection
-                                                              .questions[
-                                                              questionIndex
-                                                            ],
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.currentSection
-                                                                .questions,
-                                                              questionIndex,
-                                                              $$v
-                                                            );
-                                                          },
-                                                          expression:
-                                                            "currentSection.questions[questionIndex]"
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  )
-                                                : _vm._e(),
-                                              _vm._v(" "),
-                                              ["free_text", "integer"].indexOf(
-                                                question.type
-                                              ) >= 0
-                                                ? _c(
-                                                    "span",
-                                                    [
-                                                      _c("input-question", {
-                                                        attrs: {
-                                                          disabled: _vm.disabled
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.currentSection
-                                                              .questions[
-                                                              questionIndex
-                                                            ],
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.currentSection
-                                                                .questions,
-                                                              questionIndex,
-                                                              $$v
-                                                            );
-                                                          },
-                                                          expression:
-                                                            "currentSection.questions[questionIndex]"
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  )
-                                                : _vm._e(),
-                                              _vm._v(" "),
-                                              ["single_select", "yes_no"].indexOf(
-                                                question.type
-                                              ) >= 0
-                                                ? _c(
-                                                    "span",
-                                                    [
-                                                      _c("radio-question", {
-                                                        attrs: {
-                                                          disabled: _vm.disabled
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.currentSection
-                                                              .questions[
-                                                              questionIndex
-                                                            ],
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.currentSection
-                                                                .questions,
-                                                              questionIndex,
-                                                              $$v
-                                                            );
-                                                          },
-                                                          expression:
-                                                            "currentSection.questions[questionIndex]"
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  )
-                                                : _vm._e()
-                                            ]
-                                          )
-                                        }
-                                      ),
-                                      0
-                                    ),
+                                                    "free_text",
+                                                    "integer"
+                                                  ].indexOf(question.type) >= 0
+                                                    ? _c(
+                                                        "span",
+                                                        [
+                                                          _c("input-question", {
+                                                            attrs: {
+                                                              disabled:
+                                                                _vm.disabled
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.currentSection
+                                                                  .questions[
+                                                                  questionIndex
+                                                                ],
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm
+                                                                    .currentSection
+                                                                    .questions,
+                                                                  questionIndex,
+                                                                  $$v
+                                                                );
+                                                              },
+                                                              expression:
+                                                                "currentSection.questions[questionIndex]"
+                                                            }
+                                                          })
+                                                        ],
+                                                        1
+                                                      )
+                                                    : _vm._e(),
+                                                  _vm._v(" "),
+                                                  [
+                                                    "single_select",
+                                                    "yes_no"
+                                                  ].indexOf(question.type) >= 0
+                                                    ? _c(
+                                                        "span",
+                                                        [
+                                                          _c("radio-question", {
+                                                            attrs: {
+                                                              disabled:
+                                                                _vm.disabled
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.currentSection
+                                                                  .questions[
+                                                                  questionIndex
+                                                                ],
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm
+                                                                    .currentSection
+                                                                    .questions,
+                                                                  questionIndex,
+                                                                  $$v
+                                                                );
+                                                              },
+                                                              expression:
+                                                                "currentSection.questions[questionIndex]"
+                                                            }
+                                                          })
+                                                        ],
+                                                        1
+                                                      )
+                                                    : _vm._e()
+                                                ]
+                                              )
+                                            }
+                                          ),
+                                          0
+                                        )
+                                      : _c("div", [
+                                          _c("h3", [
+                                            _vm._v(
+                                              "No questions defined on this section."
+                                            )
+                                          ])
+                                        ]),
                                     _vm._v(" "),
                                     !_vm.disabled
                                       ? _c("div", { staticClass: "control" }, [
@@ -1652,7 +1717,7 @@
     /* style */
     var __vue_inject_styles__$5 = function (inject) {
       if (!inject) { return }
-      inject("data-v-3db00df8_0", { source: ".duckform {\n  font-size: 1rem;\n}\n.duckform a {\n  transition-duration: 0.4s;\n}\n.duckform fieldset {\n  border-bottom: 1px solid #ccc;\n  border-left: 0;\n  border-right: 0;\n  border-top: 0;\n  padding: 0 0 25px 0;\n  margin: 20px 20px 10px 20px;\n}\n.duckform button {\n  transition-duration: 0.4s;\n}\n.duckform button:focus {\n  outline: none;\n}\n.duckform button:not([disabled]) {\n  cursor: pointer;\n}\n.duckform .button {\n  background-color: #edaca0;\n  border: none;\n  color: #fff;\n  display: inline-block;\n  font-size: 1.4rem;\n  padding: 15px 30px;\n  text-decoration: none;\n  border: 1px solid #fff;\n}\n.duckform .button[disabled] {\n  background-color: #A5AFA5;\n}\n.duckform .button:not([disabled]):hover {\n  background-color: #fff;\n  color: #000;\n  border: 1px solid #000;\n}\n.duckform .button.orange {\n  background-color: #FF5900;\n}\n.duckform .button.orange:hover {\n  background-color: #004D50;\n}\n.duckform .input label {\n  align-items: flex-start;\n  cursor: pointer;\n  display: flex;\n}\n.duckform .input input[type=text],\n.duckform .input input[type=number],\n.duckform .input input[type=date] {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border-radius: 5px;\n  border: 0;\n  background-color: #8ec0ed30;\n  box-shadow: none;\n  box-sizing: border-box;\n  display: block;\n  padding: 5px 10px;\n}\n.duckform .input input[type=text]:focus,\n.duckform .input input[type=number]:focus,\n.duckform .input input[type=date]:focus {\n  outline: none;\n  transition-duration: 0.4s;\n}\n.duckform .input input.other {\n  display: inline-block;\n}\n.duckform .header {\n  border-bottom: 1px solid #ddd;\n  text-align: center;\n  width: 100%;\n}\n@media (min-width: 1000px) {\n.duckform .header {\n    text-align: left;\n}\n}\n.duckform .header .center {\n  padding: 0 30px;\n}\n.duckform .header img {\n  height: auto;\n  width: 150px;\n  margin: 15px 0;\n}\n.duckform .content {\n  flex: 1 0 0;\n  padding: 25px 0 25px 0;\n  margin: 0 auto;\n  max-width: 850px;\n}\n.duckform .control {\n  padding: 20px 0;\n  text-align: center;\n}\n.duckform .control button.back {\n  background-color: transparent;\n  border: 1px solid #ccc;\n  color: #ccc;\n}\n.duckform .control button.back:hover {\n  background-color: transparent !important;\n  border-color: #000;\n  color: #000;\n}\n.duckform .progress {\n  display: flex;\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  top: 0;\n  z-index: 1;\n}\n.duckform .progress li {\n  flex-grow: 1;\n  font-size: 12px;\n  text-align: center;\n  transition-duration: 0.4s;\n  border-top: 7px solid #555;\n  opacity: 0.25;\n}\n.duckform .progress li.active {\n  opacity: 1;\n  border-top-color: #0000ff;\n}\n\n/*# sourceMappingURL=Duckform.vue.map */", map: {"version":3,"sources":["/home/tate/vue-duckform/src/Duckform.vue","Duckform.vue"],"names":[],"mappings":"AAoPA;EACA,eAAA;ACnPA;ADqPA;EACA,yBAAA;ACnPA;ADsPA;EACA,6BAAA;EACA,cAAA;EACA,eAAA;EACA,aAAA;EACA,mBAAA;EACA,2BAAA;ACpPA;ADuPA;EACA,yBAAA;ACrPA;ADsPA;EAAA,aAAA;ACnPA;ADoPA;EAAA,eAAA;ACjPA;ADoPA;EACA,yBAAA;EACA,YAAA;EACA,WAAA;EACA,qBAAA;EACA,iBAAA;EACA,kBAAA;EACA,qBAAA;EACA,sBAAA;AClPA;ADoPA;EACA,yBAAA;AClPA;ADoPA;EACA,sBAAA;EACA,WAAA;EACA,sBAAA;AClPA;ADoPA;EACA,yBAAA;AClPA;ADoPA;EACA,yBAAA;AClPA;AD0PA;EACA,uBAAA;EACA,eAAA;EACA,aAAA;ACxPA;AD0PA;;;EAGA,wBAAA;EACA,qBAAA;EACA,gBAAA;EAEA,kBAAA;EACA,SAAA;EACA,2BAAA;EACA,gBAAA;EACA,sBAAA;EACA,cAAA;EACA,iBAAA;ACzPA;AD0PA;;;EACA,aAAA;EACA,yBAAA;ACtPA;ADyPA;EACA,qBAAA;ACvPA;AD2PA;EACA,6BAAA;EACA,kBAAA;EACA,WAAA;ACzPA;AD0PA;AAJA;IAKA,gBAAA;ACvPE;AACF;ADwPA;EACA,eAAA;ACtPA;ADwPA;EACA,YAAA;EACA,YAAA;EACA,cAAA;ACtPA;AD0PA;EACA,WAAA;EACA,sBAAA;EACA,cAAA;EACA,gBAAA;ACxPA;AD2PA;EACA,eAAA;EACA,kBAAA;ACzPA;AD2PA;EACA,6BAAA;EACA,sBAAA;EACA,WAAA;ACzPA;AD0PA;EACA,wCAAA;EACA,kBAAA;EACA,WAAA;ACxPA;AD6PA;EACA,aAAA;EACA,SAAA;EACA,eAAA;EACA,OAAA;EACA,QAAA;EACA,MAAA;EACA,UAAA;AC3PA;AD4PA;EACA,YAAA;EACA,eAAA;EACA,kBAAA;EACA,yBAAA;EACA,0BAAA;EACA,aAAA;AC1PA;AD2PA;EACA,UAAA;EACA,yBAAA;ACzPA;;AAEA,uCAAuC","file":"Duckform.vue","sourcesContent":["<template>\n  <div class=\"duckform\">\n    <div v-if=\"loadingData\">\n      <slot name=\"loading\" v-bind:form=\"form\">\n        <h1 class=\"text-center\">{{ form.title || 'Loading...' }}</h1>\n      </slot>\n    </div>\n    <div v-else-if=\"errorLoading\">\n      <slot name=\"errorLoading\" v-bind:form=\"form\">\n        <h1 class=\"text-center\">Ups, there was an error loading the form.</h1>\n      </slot>\n    </div>\n    <div v-else>\n      <validation-observer ref=\"validationObserver\" v-slot=\"slotProps\">\n        <main class=\"content\">\n          <slot name=\"completed\" v-if=\"formSubmitted\" v-bind:survey=\"form\">\n            <h1 class=\"text-center\">Thanks!</h1>\n            <h2 class=\"text-center\">Form was submitted correctly.</h2>\n          </slot>\n          <form v-else ref=\"surveyTop\">\n            <h1 v-if=\"form.title\" style=\"font-size: 2em\" class=\"text-center\">{{ form.title }}</h1>\n            <ul v-if=\"!disabled\" class=\"progress list-unstyled\">\n              <li v-for=\"(section, index) in form.sections\" :class=\"{'active': index <= currentSectionIndex}\"></li>\n            </ul>\n            <header>\n              <h2 class=\"text-center pb-3\">{{ currentSection.title }}</h2>\n              <h3 v-if=\"currentSection.description\">{{ currentSection.description }}</h3>\n            </header>\n            <section>\n              <fieldset v-for=\"(question, questionIndex) in currentSection.questions\" :key=\"`S${currentSectionIndex}|Q${questionIndex}`\">\n                <header>\n                  <div class=\"statement pb-1\">{{ question.text }}<span v-if=\"question.required\" class=\"text-danger small\"> *</span></div>\n                </header>\n                <span v-if=\"question.type === 'multiselect'\">\n                  <checkbox-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></checkbox-question>\n                </span>\n                <span v-if=\"question.type === 'scale'\">\n                  <scale-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></scale-question>\n                </span>\n                <span v-if=\"question.type === 'date'\">\n                  <date-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></date-question>\n                </span>\n                <span v-if=\"['free_text', 'integer'].indexOf(question.type) >= 0\">\n                  <input-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></input-question>\n                </span>\n                <span v-if=\"['single_select', 'yes_no'].indexOf(question.type) >= 0\">\n                  <radio-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></radio-question>\n                </span>\n              </fieldset>\n            </section>\n            <div v-if=\"!disabled\" class=\"control\">\n              <div v-if=\"validationFailed && slotProps.invalid\" class=\"small text-danger mb-4\">\n                <p class=\"pb-2\">Please complete the following questions:</p>\n                <p v-for=\"errorText in filterArray(slotProps.errors)\">{{ errorText }}.</p>\n              </div>\n              <button v-if=\"currentSectionIndex > 0\" class=\"button back\" type=\"button\" @click=\"prevSection\">Back</button>\n              <button class=\"button mt-3\" type=\"button\" @click=\"nextSection\">\n                <span v-if=\"isLastSection\">{{ savingData ? 'Submitting...' : 'Submit' }}</span>\n                <span v-else>{{ savingData ? 'Saving...' : 'Continue' }}</span>\n              </button>\n            </div>\n          </form>\n        </main>\n      </validation-observer>\n    </div>\n  </div>\n</template>\n\n<script>\n  import InputQuestion from './components/Questions/Input.vue'\n  import RadioQuestion from './components/Questions/Radio.vue'\n  import CheckboxQuestion from './components/Questions/Checkbox.vue'\n  import ScaleQuestion from './components/Questions/Scale.vue'\n  import DateQuestion from './components/Questions/Date.vue'\n\n  import axios from 'axios'\n  import _ from 'lodash'\n  import { ValidationObserver } from 'vee-validate'\n\n  export default {\n    name: 'Duckform',\n    components: {\n      CheckboxQuestion,\n      DateQuestion,\n      InputQuestion,\n      RadioQuestion,\n      ScaleQuestion,\n      ValidationObserver\n    },\n    data () {\n      return {\n        currentSectionIndex: 0,\n        errorLoading: false,\n        form: this.formData,\n        formDataLoaded: false,\n        formId: null,\n        formSubmitted: false,\n        loadingData: true,\n        savingData: false,\n        submit: this.submitData,\n        submitDataLoaded: false,\n        validationFailed: false,\n      }\n    },\n    props: {\n      formData: {\n        type: Object,\n        default: () => { return { sections: [] } }\n      },\n      formDataEndpoint: {\n        type: String,\n        default: null\n      },\n      disabled: {\n        type: Boolean,\n        default: false\n      },\n      submitData: {\n        type: Object,\n        default: () => { return { sections: [] } }\n      },\n      submitId: {\n        type: [Number, String],\n        default: null\n      },\n    },\n    computed: {\n      currentSection () {\n        return this.form.sections[this.currentSectionIndex]\n      },\n      isLastSection () {\n        return this.currentSectionIndex + 1 >= this.form.sections.length\n      }\n    },\n    mounted () {\n      if (_.isEmpty(this.formDataEndpoint)) {\n        this.proccessFormSections()\n        this.getSubmitAndMerge().then(() => { this.loadingData = false })\n      } else {\n        this.getForm().then(() => {\n          this.getSubmitAndMerge().then(() => { this.loadingData = false })\n        })\n      }\n    },\n    methods: {\n      filterArray(errors) {\n        const errorIndexes = Object.values(errors).map((v, k) => { return v.length ? k : null }).filter((i) => i !== null)\n\n        return Object.keys(errors).filter((v, k) => errorIndexes.indexOf(k) >= 0)\n      },\n      getForm () {\n        return axios.get(this.formDataEndpoint).then(response => {\n          this.form = response.data.data\n          this.proccessFormSections()\n        }).catch(() => {\n          this.errorLoading = true\n        }).finally(() => {\n          this.formDataLoaded = true\n        })\n      },\n      getSubmit () {\n        return axios.get(`${this.formDataEndpoint}/submits/${this.submitId}`).then(response => {\n          this.submit = response.data.data\n          this.formSubmitted = !_.isEmpty(response.data.data.completed_at)\n        }).catch(() => {\n          this.errorLoading = true\n        }).finally(() => {\n          this.submitDataLoaded = true\n        })\n      },\n      getSubmitAndMerge () {\n        if (_.isEmpty(this.submitId)) {\n          this.mergeSubmitData()\n          return new Promise((resolve) => resolve())\n        } else {\n          return this.getSubmit().then(() => this.mergeSubmitData())\n        }\n      },\n      proccessFormSections () {\n        this.form.sections = _.sortBy(this.form.sections, (i) => i.order || 0).map((section) => {\n          section.questions.map((question) => {\n            question.possible_answers = _.sortBy(question.possible_answers, (i) => i.order || 0)\n            this.$set(question, 'possible_answers_selected', [])\n            return question\n          })\n          return section\n        })\n      },\n      mergeSubmitData() {\n        const savedSectionsArranged = _.keyBy(this.submit.sections.map((section) => {\n          section.questions = _.keyBy(section.questions, 'id')\n          return section\n        }), 'slug')\n        const formSectionsArranged = _.keyBy(this.form.sections.map((section) => {\n          section.questions = _.keyBy(section.questions, 'id')\n          return section\n        }), 'slug')\n        this.form.sections = _.values(_.merge(formSectionsArranged, savedSectionsArranged))\n      },\n      nextSection () {\n        this.$refs.validationObserver.validate().then(success => {\n          if (!success) {\n            this.validationFailed = true\n            return false\n          }\n\n          this.validationFailed = false\n\n          this.save().then(() => {\n            if (this.currentSectionIndex + 1 < this.form.sections.length) {\n              this.currentSectionIndex++\n              this.$refs.surveyTop.scrollIntoView()\n            }\n          })\n        })\n      },\n      prevSection () {\n        if (this.currentSectionIndex > 0) {\n          this.currentSectionIndex--\n          this.$refs.surveyTop.scrollIntoView()\n        }\n      },\n      save () {\n        this.savingData = true\n        const responseHandler = (response) => {\n          this.submit = response.data.data\n          this.mergeSubmitData()\n\n          if (this.isLastSection) {\n            this.formSubmitted = !_.isEmpty(response.data.data.completed_at)\n          }\n        }\n\n        if (this.submit.token) {\n          return axios.patch(`${this.formDataEndpoint}/submits/${this.submit.token}`, { data: this.form }).then(responseHandler).finally(() => { this.savingData = false })\n        }\n\n        return axios.post(`${this.formDataEndpoint}/submits`, { data: this.form }).then(responseHandler).finally(() => { this.savingData = false })\n      }\n    }\n  }\n</script>\n\n<style lang=\"scss\">\n  .duckform {\n    font-size: 1rem;\n\n    a {\n      transition-duration: .4s\n    }\n\n    fieldset {\n      border-bottom: 1px solid #ccc;\n      border-left: 0;\n      border-right: 0;\n      border-top: 0;\n      padding: 0 0 25px 0;\n      margin: 20px 20px 10px 20px;\n    }\n\n    button {\n      transition-duration: .4s;\n      &:focus { outline: none; }\n      &:not([disabled]) { cursor: pointer; }\n    }\n\n    .button {\n      background-color: #edaca0;\n      border: none;\n      color: #fff;\n      display: inline-block;\n      font-size: 1.4rem;\n      padding: 15px 30px;\n      text-decoration: none;\n      border: 1px solid #fff;\n\n      &[disabled] {\n        background-color: #A5AFA5;\n      }\n      &:not([disabled]):hover {\n        background-color: #fff;\n        color: #000;\n        border: 1px solid #000;\n      }\n      &.orange {\n        background-color: #FF5900;\n      }\n      &.orange:hover {\n        background-color: #004D50;\n      }\n    }\n\n    .statement {\n\n    }\n    .input {\n      label {\n        align-items: flex-start;\n        cursor: pointer;\n        display: flex;\n      }\n      input[type=\"text\"],\n      input[type=\"number\"],\n      input[type=\"date\"] {\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n\n        border-radius: 5px;\n        border: 0;\n        background-color: #8ec0ed30;\n        box-shadow: none;\n        box-sizing: border-box;\n        display: block;\n        padding: 5px 10px;\n        &:focus {\n          outline: none;\n          transition-duration: .4s;\n        }\n      }\n      input.other {\n        display: inline-block;\n      }\n    }\n\n    .header {\n      border-bottom: 1px solid #ddd;\n      text-align: center;\n      width: 100%;\n      @media (min-width: 1000px) {\n        text-align: left;\n      }\n      .center {\n        padding: 0 30px;\n      }\n      img {\n        height: auto;\n        width: 150px;\n        margin: 15px 0;\n      }\n    }\n\n    .content {\n      flex: 1 0 0;\n      padding: 25px 0 25px 0;\n      margin: 0 auto;\n      max-width: 850px;\n    }\n\n    .control {\n      padding: 20px 0;\n      text-align: center;\n\n      button.back {\n        background-color: transparent;\n        border: 1px solid #ccc;\n        color: #ccc;\n        &:hover {\n          background-color: transparent !important;\n          border-color: #000;\n          color: #000;\n        }\n      }\n    }\n\n    .progress {\n      display: flex;\n      margin: 0;\n      position: fixed;\n      left: 0;\n      right: 0;\n      top: 0;\n      z-index: 1;\n      li {\n        flex-grow: 1;\n        font-size: 12px;\n        text-align: center;\n        transition-duration: .4s;\n        border-top: 7px solid #555;\n        opacity: 0.25;\n        &.active {\n          opacity: 1;\n          border-top-color: #0000ff;\n        }\n      }\n    }\n  }\n</style>\n",".duckform {\n  font-size: 1rem;\n}\n.duckform a {\n  transition-duration: 0.4s;\n}\n.duckform fieldset {\n  border-bottom: 1px solid #ccc;\n  border-left: 0;\n  border-right: 0;\n  border-top: 0;\n  padding: 0 0 25px 0;\n  margin: 20px 20px 10px 20px;\n}\n.duckform button {\n  transition-duration: 0.4s;\n}\n.duckform button:focus {\n  outline: none;\n}\n.duckform button:not([disabled]) {\n  cursor: pointer;\n}\n.duckform .button {\n  background-color: #edaca0;\n  border: none;\n  color: #fff;\n  display: inline-block;\n  font-size: 1.4rem;\n  padding: 15px 30px;\n  text-decoration: none;\n  border: 1px solid #fff;\n}\n.duckform .button[disabled] {\n  background-color: #A5AFA5;\n}\n.duckform .button:not([disabled]):hover {\n  background-color: #fff;\n  color: #000;\n  border: 1px solid #000;\n}\n.duckform .button.orange {\n  background-color: #FF5900;\n}\n.duckform .button.orange:hover {\n  background-color: #004D50;\n}\n.duckform .input label {\n  align-items: flex-start;\n  cursor: pointer;\n  display: flex;\n}\n.duckform .input input[type=text],\n.duckform .input input[type=number],\n.duckform .input input[type=date] {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border-radius: 5px;\n  border: 0;\n  background-color: #8ec0ed30;\n  box-shadow: none;\n  box-sizing: border-box;\n  display: block;\n  padding: 5px 10px;\n}\n.duckform .input input[type=text]:focus,\n.duckform .input input[type=number]:focus,\n.duckform .input input[type=date]:focus {\n  outline: none;\n  transition-duration: 0.4s;\n}\n.duckform .input input.other {\n  display: inline-block;\n}\n.duckform .header {\n  border-bottom: 1px solid #ddd;\n  text-align: center;\n  width: 100%;\n}\n@media (min-width: 1000px) {\n  .duckform .header {\n    text-align: left;\n  }\n}\n.duckform .header .center {\n  padding: 0 30px;\n}\n.duckform .header img {\n  height: auto;\n  width: 150px;\n  margin: 15px 0;\n}\n.duckform .content {\n  flex: 1 0 0;\n  padding: 25px 0 25px 0;\n  margin: 0 auto;\n  max-width: 850px;\n}\n.duckform .control {\n  padding: 20px 0;\n  text-align: center;\n}\n.duckform .control button.back {\n  background-color: transparent;\n  border: 1px solid #ccc;\n  color: #ccc;\n}\n.duckform .control button.back:hover {\n  background-color: transparent !important;\n  border-color: #000;\n  color: #000;\n}\n.duckform .progress {\n  display: flex;\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  top: 0;\n  z-index: 1;\n}\n.duckform .progress li {\n  flex-grow: 1;\n  font-size: 12px;\n  text-align: center;\n  transition-duration: 0.4s;\n  border-top: 7px solid #555;\n  opacity: 0.25;\n}\n.duckform .progress li.active {\n  opacity: 1;\n  border-top-color: #0000ff;\n}\n\n/*# sourceMappingURL=Duckform.vue.map */"]}, media: undefined });
+      inject("data-v-6ff25a87_0", { source: ".duckform {\n  font-size: 1rem;\n  text-align: left;\n}\n.duckform p {\n  margin: 3px 0;\n}\n.duckform header h3 {\n  margin-left: 20px;\n}\n.duckform .row {\n  display: flex;\n}\n.duckform .shadow {\n  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;\n}\n.duckform .bg-white {\n  background-color: #fff !important;\n}\n.duckform .text-center {\n  text-align: center !important;\n}\n.duckform .text-right {\n  text-align: right !important;\n}\n.duckform .text-left {\n  text-align: left !important;\n}\n.duckform .text-danger {\n  color: #dc3545 !important;\n}\n.duckform .list-unstyled {\n  padding-left: 0;\n  list-style: none;\n}\n.duckform .small {\n  font-size: 0.75em;\n}\n.duckform .w-25 {\n  width: 25% !important;\n}\n.duckform .w-50 {\n  width: 50% !important;\n}\n.duckform .w-100 {\n  width: 100% !important;\n}\n.duckform .pt-0, .duckform .py-0 {\n  padding-top: 0 !important;\n}\n.duckform .pt-1, .duckform .py-1 {\n  padding-top: 0.25em !important;\n}\n.duckform .pt-2, .duckform .py-2 {\n  padding-top: 0.5em !important;\n}\n.duckform .pt-3, .duckform .py-3 {\n  padding-top: 0.75em !important;\n}\n.duckform .pt-4, .duckform .py-4 {\n  padding-top: 1em !important;\n}\n.duckform .pb-0, .duckform .py-0 {\n  padding-bottom: 0 !important;\n}\n.duckform .pb-1, .duckform .py-1 {\n  padding-bottom: 0.25em !important;\n}\n.duckform .pb-2, .duckform .py-2 {\n  padding-bottom: 0.5em !important;\n}\n.duckform .pb-3, .duckform .py-3 {\n  padding-bottom: 0.75em !important;\n}\n.duckform .pb-4, .duckform .py-4 {\n  padding-bottom: 1em !important;\n}\n.duckform .pl-0, .duckform .px-0 {\n  padding-left: 0 !important;\n}\n.duckform .pl-1, .duckform .px-1 {\n  padding-left: 0.25em !important;\n}\n.duckform .pl-2, .duckform .px-2 {\n  padding-left: 0.5em !important;\n}\n.duckform .pl-3, .duckform .px-3 {\n  padding-left: 0.75em !important;\n}\n.duckform .pl-4, .duckform .px-4 {\n  padding-left: 1em !important;\n}\n.duckform .pr-0, .duckform .px-0 {\n  padding-right: 0 !important;\n}\n.duckform .pr-1, .duckform .px-1 {\n  padding-right: 0.25em !important;\n}\n.duckform .pr-2, .duckform .px-2 {\n  padding-right: 0.5em !important;\n}\n.duckform .pr-3, .duckform .px-3 {\n  padding-right: 0.75em !important;\n}\n.duckform .pr-4, .duckform .px-4 {\n  padding-right: 1em !important;\n}\n.duckform .mt-0, .duckform .my-0 {\n  margin-top: 0 !important;\n}\n.duckform .mt-1, .duckform .my-1 {\n  margin-top: 0.25em !important;\n}\n.duckform .mt-2, .duckform .my-2 {\n  margin-top: 0.5em !important;\n}\n.duckform .mt-3, .duckform .my-3 {\n  margin-top: 0.75em !important;\n}\n.duckform .mt-4, .duckform .my-4 {\n  margin-top: 1em !important;\n}\n.duckform .mb-0, .duckform .my-0 {\n  margin-bottom: 0 !important;\n}\n.duckform .mb-1, .duckform .my-1 {\n  margin-bottom: 0.25em !important;\n}\n.duckform .mb-2, .duckform .my-2 {\n  margin-bottom: 0.5em !important;\n}\n.duckform .mb-3, .duckform .my-3 {\n  margin-bottom: 0.75em !important;\n}\n.duckform .mb-4, .duckform .my-4 {\n  margin-bottom: 1em !important;\n}\n.duckform .ml-0, .duckform .mx-0 {\n  margin-left: 0 !important;\n}\n.duckform .ml-1, .duckform .mx-1 {\n  margin-left: 0.25em !important;\n}\n.duckform .ml-2, .duckform .mx-2 {\n  margin-left: 0.5em !important;\n}\n.duckform .ml-3, .duckform .mx-3 {\n  margin-left: 0.75em !important;\n}\n.duckform .ml-4, .duckform .mx-4 {\n  margin-left: 1em !important;\n}\n.duckform .mr-0, .duckform .mx-0 {\n  margin-right: 0 !important;\n}\n.duckform .mr-1, .duckform .mx-1 {\n  margin-right: 0.25em !important;\n}\n.duckform .mr-2, .duckform .mx-2 {\n  margin-right: 0.5em !important;\n}\n.duckform .mr-3, .duckform .mx-3 {\n  margin-right: 0.75em !important;\n}\n.duckform .mr-4, .duckform .mx-4 {\n  margin-right: 1em !important;\n}\n.duckform a {\n  transition-duration: 0.4s;\n}\n.duckform fieldset {\n  border-bottom: 1px solid #ccc;\n  border-left: 0;\n  border-right: 0;\n  border-top: 0;\n  padding: 0 0 25px 0;\n  margin: 20px 20px 10px 20px;\n}\n.duckform button {\n  transition-duration: 0.4s;\n}\n.duckform button:focus {\n  outline: none;\n}\n.duckform button:not([disabled]) {\n  cursor: pointer;\n}\n.duckform .button {\n  background-color: #edaca0;\n  border: none;\n  color: #fff;\n  display: inline-block;\n  font-size: 1.4rem;\n  padding: 15px 30px;\n  text-decoration: none;\n  border: 1px solid #fff;\n}\n.duckform .button[disabled] {\n  background-color: #A5AFA5;\n}\n.duckform .button:not([disabled]):hover {\n  background-color: #fff;\n  color: #000;\n  border: 1px solid #000;\n}\n.duckform .button.orange {\n  background-color: #FF5900;\n}\n.duckform .button.orange:hover {\n  background-color: #004D50;\n}\n.duckform .input label {\n  align-items: flex-start;\n  cursor: pointer;\n  display: flex;\n}\n.duckform .input input[type=text],\n.duckform .input input[type=number],\n.duckform .input input[type=date] {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border-radius: 5px;\n  border: 0;\n  background-color: #8ec0ed30;\n  box-shadow: none;\n  box-sizing: border-box;\n  display: block;\n  padding: 5px 10px;\n}\n.duckform .input input[type=text]:focus,\n.duckform .input input[type=number]:focus,\n.duckform .input input[type=date]:focus {\n  outline: none;\n  transition-duration: 0.4s;\n}\n.duckform .input input.other {\n  display: inline-block;\n}\n.duckform .content {\n  flex: 1 0 0;\n  padding: 25px 0 25px 0;\n  margin: 0 auto;\n}\n.duckform .control {\n  padding: 20px 0;\n  text-align: center;\n}\n.duckform .control button.back {\n  background-color: transparent;\n  border: 1px solid #ccc;\n  color: #ccc;\n}\n.duckform .control button.back:hover {\n  background-color: transparent !important;\n  border-color: #000;\n  color: #000;\n}\n.duckform .progress {\n  display: flex;\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  top: 0;\n  z-index: 1;\n}\n.duckform .progress li {\n  flex-grow: 1;\n  font-size: 12px;\n  text-align: center;\n  transition-duration: 0.4s;\n  border-top: 7px solid #555;\n  opacity: 0.25;\n}\n.duckform .progress li.active {\n  opacity: 1;\n  border-top-color: #0055ff;\n}\n\n/*# sourceMappingURL=Duckform.vue.map */", map: {"version":3,"sources":["/home/tate/vue-duckform/src/Duckform.vue","Duckform.vue"],"names":[],"mappings":"AAqRA;EACA,eAAA;EACA,gBAAA;ACpRA;ADsRA;EACA,aAAA;ACpRA;ADuRA;EACA,iBAAA;ACrRA;ADwRA;EACA,aAAA;ACtRA;ADyRA;EACA,wDAAA;ACvRA;AD0RA;EACA,iCAAA;ACxRA;AD2RA;EACA,6BAAA;ACzRA;AD2RA;EACA,4BAAA;ACzRA;AD2RA;EACA,2BAAA;ACzRA;AD4RA;EACA,yBAAA;AC1RA;AD6RA;EACA,eAAA;EACA,gBAAA;AC3RA;AD8RA;EACA,iBAAA;AC5RA;AD+RA;EACA,qBAAA;AC7RA;AD+RA;EACA,qBAAA;AC7RA;AD+RA;EACA,sBAAA;AC7RA;ADgSA;EACA,yBAAA;AC9RA;ADgSA;EACA,8BAAA;AC9RA;ADgSA;EACA,6BAAA;AC9RA;ADgSA;EACA,8BAAA;AC9RA;ADgSA;EACA,2BAAA;AC9RA;ADiSA;EACA,4BAAA;AC/RA;ADiSA;EACA,iCAAA;AC/RA;ADiSA;EACA,gCAAA;AC/RA;ADiSA;EACA,iCAAA;AC/RA;ADiSA;EACA,8BAAA;AC/RA;ADkSA;EACA,0BAAA;AChSA;ADkSA;EACA,+BAAA;AChSA;ADkSA;EACA,8BAAA;AChSA;ADkSA;EACA,+BAAA;AChSA;ADkSA;EACA,4BAAA;AChSA;ADmSA;EACA,2BAAA;ACjSA;ADmSA;EACA,gCAAA;ACjSA;ADmSA;EACA,+BAAA;ACjSA;ADmSA;EACA,gCAAA;ACjSA;ADmSA;EACA,6BAAA;ACjSA;ADoSA;EACA,wBAAA;AClSA;ADoSA;EACA,6BAAA;AClSA;ADoSA;EACA,4BAAA;AClSA;ADoSA;EACA,6BAAA;AClSA;ADoSA;EACA,0BAAA;AClSA;ADqSA;EACA,2BAAA;ACnSA;ADqSA;EACA,gCAAA;ACnSA;ADqSA;EACA,+BAAA;ACnSA;ADqSA;EACA,gCAAA;ACnSA;ADqSA;EACA,6BAAA;ACnSA;ADsSA;EACA,yBAAA;ACpSA;ADsSA;EACA,8BAAA;ACpSA;ADsSA;EACA,6BAAA;ACpSA;ADsSA;EACA,8BAAA;ACpSA;ADsSA;EACA,2BAAA;ACpSA;ADuSA;EACA,0BAAA;ACrSA;ADuSA;EACA,+BAAA;ACrSA;ADuSA;EACA,8BAAA;ACrSA;ADuSA;EACA,+BAAA;ACrSA;ADuSA;EACA,4BAAA;ACrSA;ADwSA;EACA,yBAAA;ACtSA;ADySA;EACA,6BAAA;EACA,cAAA;EACA,eAAA;EACA,aAAA;EACA,mBAAA;EACA,2BAAA;ACvSA;AD0SA;EACA,yBAAA;ACxSA;ADySA;EAAA,aAAA;ACtSA;ADuSA;EAAA,eAAA;ACpSA;ADuSA;EACA,yBAAA;EACA,YAAA;EACA,WAAA;EACA,qBAAA;EACA,iBAAA;EACA,kBAAA;EACA,qBAAA;EACA,sBAAA;ACrSA;ADuSA;EACA,yBAAA;ACrSA;ADuSA;EACA,sBAAA;EACA,WAAA;EACA,sBAAA;ACrSA;ADuSA;EACA,yBAAA;ACrSA;ADuSA;EACA,yBAAA;ACrSA;AD6SA;EACA,uBAAA;EACA,eAAA;EACA,aAAA;AC3SA;AD6SA;;;EAGA,wBAAA;EACA,qBAAA;EACA,gBAAA;EAEA,kBAAA;EACA,SAAA;EACA,2BAAA;EACA,gBAAA;EACA,sBAAA;EACA,cAAA;EACA,iBAAA;AC5SA;AD6SA;;;EACA,aAAA;EACA,yBAAA;ACzSA;AD4SA;EACA,qBAAA;AC1SA;AD8SA;EACA,WAAA;EACA,sBAAA;EACA,cAAA;AC5SA;AD+SA;EACA,eAAA;EACA,kBAAA;AC7SA;AD+SA;EACA,6BAAA;EACA,sBAAA;EACA,WAAA;AC7SA;AD8SA;EACA,wCAAA;EACA,kBAAA;EACA,WAAA;AC5SA;ADiTA;EACA,aAAA;EACA,SAAA;EACA,eAAA;EACA,OAAA;EACA,QAAA;EACA,MAAA;EACA,UAAA;AC/SA;ADgTA;EACA,YAAA;EACA,eAAA;EACA,kBAAA;EACA,yBAAA;EACA,0BAAA;EACA,aAAA;AC9SA;AD+SA;EACA,UAAA;EACA,yBAAA;AC7SA;;AAEA,uCAAuC","file":"Duckform.vue","sourcesContent":["<template>\n  <div class=\"duckform\">\n    <div v-if=\"loadingData\">\n      <slot name=\"loading\" v-bind:form=\"form\">\n        <h1 class=\"text-center\">{{ form.title || 'Loading...' }}</h1>\n      </slot>\n    </div>\n    <div v-else-if=\"errorLoading\">\n      <slot name=\"errorLoading\" v-bind:form=\"form\">\n        <h1 class=\"text-center\">Ups, there was an error loading the form.</h1>\n      </slot>\n    </div>\n    <div v-else-if=\"!form.sections || !form.sections.length\">\n      <h1 class=\"text-center\">There are no sections defined on this form.</h1>\n    </div>\n    <div v-else>\n      <validation-observer ref=\"validationObserver\" v-slot=\"slotProps\">\n        <main class=\"content\">\n          <slot name=\"completed\" v-if=\"formSubmitted\" v-bind:survey=\"form\">\n            <h1 class=\"text-center\">Thanks!</h1>\n            <h2 class=\"text-center\">Form was submitted correctly.</h2>\n          </slot>\n          <form v-else ref=\"surveyTop\">\n            <h1 v-if=\"form.title\" style=\"font-size: 2em\" class=\"text-center\">{{ form.title }}</h1>\n            <ul v-if=\"!disabled\" class=\"progress list-unstyled\">\n              <li v-for=\"(section, index) in form.sections\" :class=\"{'active': index <= currentSectionIndex}\"></li>\n            </ul>\n            <header>\n              <h2 class=\"text-center pb-3\">{{ currentSection.title }}</h2>\n              <h3 v-if=\"currentSection.description\">{{ currentSection.description }}</h3>\n            </header>\n            <section v-if=\"currentSection.questions && currentSection.questions.length\">\n              <fieldset v-for=\"(question, questionIndex) in currentSection.questions\" :key=\"`S${currentSectionIndex}|Q${questionIndex}`\">\n                <header>\n                  <div class=\"statement pb-1\">{{ question.text }}<span v-if=\"question.required\" class=\"text-danger small\"> *</span></div>\n                </header>\n                <span v-if=\"question.type === 'multiselect'\">\n                  <checkbox-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></checkbox-question>\n                </span>\n                <span v-if=\"question.type === 'scale'\">\n                  <scale-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></scale-question>\n                </span>\n                <span v-if=\"question.type === 'date'\">\n                  <date-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></date-question>\n                </span>\n                <span v-if=\"['free_text', 'integer'].indexOf(question.type) >= 0\">\n                  <input-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></input-question>\n                </span>\n                <span v-if=\"['single_select', 'yes_no'].indexOf(question.type) >= 0\">\n                  <radio-question v-model=\"currentSection.questions[questionIndex]\" :disabled=\"disabled\"></radio-question>\n                </span>\n              </fieldset>\n            </section>\n            <div v-else>\n              <h3>No questions defined on this section.</h3>\n            </div>\n            <div v-if=\"!disabled\" class=\"control\">\n              <div v-if=\"validationFailed && slotProps.invalid\" class=\"small text-danger mb-4\">\n                <p class=\"pb-2\">Please complete the following questions:</p>\n                <p v-for=\"errorText in filterArray(slotProps.errors)\">{{ errorText }}.</p>\n              </div>\n              <button v-if=\"currentSectionIndex > 0\" class=\"button back\" type=\"button\" @click=\"prevSection\">Back</button>\n              <button class=\"button mt-3\" type=\"button\" @click=\"nextSection\">\n                <span v-if=\"isLastSection\">{{ savingData ? 'Submitting...' : 'Submit' }}</span>\n                <span v-else>{{ savingData ? 'Saving...' : 'Continue' }}</span>\n              </button>\n            </div>\n          </form>\n        </main>\n      </validation-observer>\n    </div>\n  </div>\n</template>\n\n<script>\n  import InputQuestion from './components/Questions/Input.vue'\n  import RadioQuestion from './components/Questions/Radio.vue'\n  import CheckboxQuestion from './components/Questions/Checkbox.vue'\n  import ScaleQuestion from './components/Questions/Scale.vue'\n  import DateQuestion from './components/Questions/Date.vue'\n\n  import axios from 'axios'\n  import _ from 'lodash'\n  import { ValidationObserver } from 'vee-validate'\n\n  export default {\n    name: 'Duckform',\n    components: {\n      CheckboxQuestion,\n      DateQuestion,\n      InputQuestion,\n      RadioQuestion,\n      ScaleQuestion,\n      ValidationObserver\n    },\n    data () {\n      return {\n        currentSectionIndex: 0,\n        errorLoading: false,\n        form: this.formData,\n        formDataLoaded: false,\n        formId: null,\n        formSubmitted: false,\n        loadingData: true,\n        savingData: false,\n        submit: this.submitData,\n        submitDataLoaded: false,\n        validationFailed: false,\n      }\n    },\n    props: {\n      formData: {\n        type: Object,\n        default: () => { return {} }\n      },\n      formDataEndpoint: {\n        type: String,\n        default: null\n      },\n      disabled: {\n        type: Boolean,\n        default: false\n      },\n      submitData: {\n        type: Object,\n        default: () => { return {} }\n      },\n      submitId: {\n        type: [Number, String],\n        default: null\n      },\n      value: {\n        type: Object,\n        default: () => { return {} }\n      },\n    },\n    computed: {\n      currentSection () {\n        return this.form.sections[this.currentSectionIndex]\n      },\n      isLastSection () {\n        return this.currentSectionIndex + 1 >= this.form.sections.length\n      }\n    },\n    mounted () {\n      if (_.isEmpty(this.formDataEndpoint)) {\n        this.proccessFormSections()\n        this.getSubmitAndMerge().then(() => { this.loadingData = false })\n      } else {\n        this.getForm().then(() => {\n          this.getSubmitAndMerge().then(() => { this.loadingData = false })\n        })\n      }\n    },\n    methods: {\n      filterArray(errors) {\n        const errorIndexes = Object.values(errors).map((v, k) => { return v.length ? k : null }).filter((i) => i !== null)\n\n        return Object.keys(errors).filter((v, k) => errorIndexes.indexOf(k) >= 0)\n      },\n      getForm () {\n        return axios.get(this.formDataEndpoint).then(response => {\n          this.form = response.data.data\n          this.proccessFormSections()\n        }).catch(() => {\n          this.errorLoading = true\n        }).finally(() => {\n          this.formDataLoaded = true\n        })\n      },\n      getSubmit () {\n        return axios.get(`${this.formDataEndpoint}/submits/${this.submitId}`).then(response => {\n          this.submit = response.data.data\n          this.formSubmitted = !_.isEmpty(response.data.data.completed_at)\n        }).catch(() => {\n          this.errorLoading = true\n        }).finally(() => {\n          this.submitDataLoaded = true\n        })\n      },\n      getSubmitAndMerge () {\n        if (_.isEmpty(this.submitId)) {\n          this.mergeSubmitData()\n          return new Promise((resolve) => resolve())\n        } else {\n          return this.getSubmit().then(() => this.mergeSubmitData())\n        }\n      },\n      proccessFormSections () {\n        this.form.sections = _.sortBy(this.form.sections, (i) => i.order || 0).map((section) => {\n          if (section.questions) {\n            section.questions.map((question) => {\n              question.possible_answers = _.sortBy(question.possible_answers, (i) => i.order || 0)\n              this.$set(question, 'possible_answers_selected', [])\n              return question\n            })\n          }\n          return section\n        })\n      },\n      mergeSubmitData() {\n        if (!this.submit.sections || !this.submit.sections.length) {\n          return null\n        }\n        const savedSectionsArranged = _.keyBy(this.submit.sections.map((section) => {\n          section.questions = _.keyBy(section.questions, 'id')\n          return section\n        }), 'slug')\n        const formSectionsArranged = _.keyBy(this.form.sections.map((section) => {\n          section.questions = _.keyBy(section.questions, 'id')\n          return section\n        }), 'slug')\n        this.form.sections = _.values(_.merge(formSectionsArranged, savedSectionsArranged))\n      },\n      nextSection () {\n        this.$refs.validationObserver.validate().then(success => {\n          if (!success) {\n            this.validationFailed = true\n            return false\n          }\n\n          this.validationFailed = false\n\n          this.save().then(() => {\n            if (this.currentSectionIndex + 1 < this.form.sections.length) {\n              this.currentSectionIndex++\n              this.$refs.surveyTop.scrollIntoView()\n            }\n          }).finally(() => {\n            this.$emit('input', this.form)\n            this.$emit('save')\n          })\n        })\n      },\n      prevSection () {\n        if (this.currentSectionIndex > 0) {\n          this.currentSectionIndex--\n          this.$refs.surveyTop.scrollIntoView()\n        }\n      },\n      saveToApi () {\n        this.savingData = true\n        const responseHandler = (response) => {\n          this.submit = response.data.data\n          this.mergeSubmitData()\n\n          if (this.isLastSection) {\n            this.formSubmitted = !_.isEmpty(response.data.data.completed_at)\n          }\n        }\n\n        if (this.submit.token) {\n          return axios.patch(`${this.formDataEndpoint}/submits/${this.submit.token}`, { data: this.form }).then(responseHandler).finally(() => {\n            this.savingData = false\n          })\n        }\n\n        return axios.post(`${this.formDataEndpoint}/submits`, { data: this.form }).then(responseHandler).finally(() => {\n          this.savingData = false\n        })\n      },\n      save () {\n        if (!_.isEmpty(this.formDataEndpoint)) {\n          return this.saveToApi()\n        }\n\n        if (this.isLastSection) {\n          this.formSubmitted = true\n        }\n\n        return new Promise((resolve) => resolve())\n      }\n    }\n  }\n</script>\n\n<style lang=\"scss\">\n  .duckform {\n    font-size: 1rem;\n    text-align: left;\n\n    p {\n        margin: 3px 0;\n    }\n\n    header h3 {\n      margin-left: 20px;\n    }\n\n    .row {\n        display: flex;\n    }\n\n    .shadow {\n      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;\n    }\n\n    .bg-white {\n      background-color: #fff !important;\n    }\n\n    .text-center {\n      text-align: center !important;\n    }\n    .text-right {\n      text-align: right !important;\n    }\n    .text-left {\n      text-align: left !important;\n    }\n\n    .text-danger {\n      color: #dc3545 !important;\n    }\n\n    .list-unstyled {\n      padding-left: 0;\n      list-style: none;\n    }\n\n    .small {\n        font-size: .75em;\n    }\n\n    .w-25 {\n      width: 25% !important;\n    }\n    .w-50 {\n      width: 50% !important;\n    }\n    .w-100 {\n      width: 100% !important;\n    }\n\n    .pt-0, .py-0 {\n        padding-top: 0 !important;\n    }\n    .pt-1, .py-1 {\n        padding-top: .25em !important;\n    }\n    .pt-2, .py-2 {\n        padding-top: .5em !important;\n    }\n    .pt-3, .py-3 {\n        padding-top: .75em !important;\n    }\n    .pt-4, .py-4 {\n        padding-top: 1em !important;\n    }\n\n    .pb-0, .py-0 {\n        padding-bottom: 0 !important;\n    }\n    .pb-1, .py-1 {\n        padding-bottom: .25em !important;\n    }\n    .pb-2, .py-2 {\n        padding-bottom: .5em !important;\n    }\n    .pb-3, .py-3 {\n        padding-bottom: .75em !important;\n    }\n    .pb-4, .py-4 {\n        padding-bottom: 1em !important;\n    }\n\n    .pl-0, .px-0 {\n        padding-left: 0 !important;\n    }\n    .pl-1, .px-1 {\n        padding-left: .25em !important;\n    }\n    .pl-2, .px-2 {\n        padding-left: .5em !important;\n    }\n    .pl-3, .px-3 {\n        padding-left: .75em !important;\n    }\n    .pl-4, .px-4 {\n        padding-left: 1em !important;\n    }\n\n    .pr-0, .px-0 {\n        padding-right: 0 !important;\n    }\n    .pr-1, .px-1 {\n        padding-right: .25em !important;\n    }\n    .pr-2, .px-2 {\n        padding-right: .5em !important;\n    }\n    .pr-3, .px-3 {\n        padding-right: .75em !important;\n    }\n    .pr-4, .px-4 {\n        padding-right: 1em !important;\n    }\n\n    .mt-0, .my-0 {\n        margin-top: 0 !important;\n    }\n    .mt-1, .my-1 {\n        margin-top: .25em !important;\n    }\n    .mt-2, .my-2 {\n        margin-top: .5em !important;\n    }\n    .mt-3, .my-3 {\n        margin-top: .75em !important;\n    }\n    .mt-4, .my-4 {\n        margin-top: 1em !important;\n    }\n\n    .mb-0, .my-0 {\n        margin-bottom: 0 !important;\n    }\n    .mb-1, .my-1 {\n        margin-bottom: .25em !important;\n    }\n    .mb-2, .my-2 {\n        margin-bottom: .5em !important;\n    }\n    .mb-3, .my-3 {\n        margin-bottom: .75em !important;\n    }\n    .mb-4, .my-4 {\n        margin-bottom: 1em !important;\n    }\n\n    .ml-0, .mx-0 {\n        margin-left: 0 !important;\n    }\n    .ml-1, .mx-1 {\n        margin-left: .25em !important;\n    }\n    .ml-2, .mx-2 {\n        margin-left: .5em !important;\n    }\n    .ml-3, .mx-3 {\n        margin-left: .75em !important;\n    }\n    .ml-4, .mx-4 {\n        margin-left: 1em !important;\n    }\n\n    .mr-0, .mx-0 {\n        margin-right: 0 !important;\n    }\n    .mr-1, .mx-1 {\n        margin-right: .25em !important;\n    }\n    .mr-2, .mx-2 {\n        margin-right: .5em !important;\n    }\n    .mr-3, .mx-3 {\n        margin-right: .75em !important;\n    }\n    .mr-4, .mx-4 {\n        margin-right: 1em !important;\n    }\n\n    a {\n      transition-duration: .4s\n    }\n\n    fieldset {\n      border-bottom: 1px solid #ccc;\n      border-left: 0;\n      border-right: 0;\n      border-top: 0;\n      padding: 0 0 25px 0;\n      margin: 20px 20px 10px 20px;\n    }\n\n    button {\n      transition-duration: .4s;\n      &:focus { outline: none; }\n      &:not([disabled]) { cursor: pointer; }\n    }\n\n    .button {\n      background-color: #edaca0;\n      border: none;\n      color: #fff;\n      display: inline-block;\n      font-size: 1.4rem;\n      padding: 15px 30px;\n      text-decoration: none;\n      border: 1px solid #fff;\n\n      &[disabled] {\n        background-color: #A5AFA5;\n      }\n      &:not([disabled]):hover {\n        background-color: #fff;\n        color: #000;\n        border: 1px solid #000;\n      }\n      &.orange {\n        background-color: #FF5900;\n      }\n      &.orange:hover {\n        background-color: #004D50;\n      }\n    }\n\n    .statement {\n\n    }\n    .input {\n      label {\n        align-items: flex-start;\n        cursor: pointer;\n        display: flex;\n      }\n      input[type=\"text\"],\n      input[type=\"number\"],\n      input[type=\"date\"] {\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n\n        border-radius: 5px;\n        border: 0;\n        background-color: #8ec0ed30;\n        box-shadow: none;\n        box-sizing: border-box;\n        display: block;\n        padding: 5px 10px;\n        &:focus {\n          outline: none;\n          transition-duration: .4s;\n        }\n      }\n      input.other {\n        display: inline-block;\n      }\n    }\n\n    .content {\n      flex: 1 0 0;\n      padding: 25px 0 25px 0;\n      margin: 0 auto;\n    }\n\n    .control {\n      padding: 20px 0;\n      text-align: center;\n\n      button.back {\n        background-color: transparent;\n        border: 1px solid #ccc;\n        color: #ccc;\n        &:hover {\n          background-color: transparent !important;\n          border-color: #000;\n          color: #000;\n        }\n      }\n    }\n\n    .progress {\n      display: flex;\n      margin: 0;\n      position: fixed;\n      left: 0;\n      right: 0;\n      top: 0;\n      z-index: 1;\n      li {\n        flex-grow: 1;\n        font-size: 12px;\n        text-align: center;\n        transition-duration: .4s;\n        border-top: 7px solid #555;\n        opacity: 0.25;\n        &.active {\n          opacity: 1;\n          border-top-color: #0055ff;\n        }\n      }\n    }\n  }\n</style>\n",".duckform {\n  font-size: 1rem;\n  text-align: left;\n}\n.duckform p {\n  margin: 3px 0;\n}\n.duckform header h3 {\n  margin-left: 20px;\n}\n.duckform .row {\n  display: flex;\n}\n.duckform .shadow {\n  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;\n}\n.duckform .bg-white {\n  background-color: #fff !important;\n}\n.duckform .text-center {\n  text-align: center !important;\n}\n.duckform .text-right {\n  text-align: right !important;\n}\n.duckform .text-left {\n  text-align: left !important;\n}\n.duckform .text-danger {\n  color: #dc3545 !important;\n}\n.duckform .list-unstyled {\n  padding-left: 0;\n  list-style: none;\n}\n.duckform .small {\n  font-size: 0.75em;\n}\n.duckform .w-25 {\n  width: 25% !important;\n}\n.duckform .w-50 {\n  width: 50% !important;\n}\n.duckform .w-100 {\n  width: 100% !important;\n}\n.duckform .pt-0, .duckform .py-0 {\n  padding-top: 0 !important;\n}\n.duckform .pt-1, .duckform .py-1 {\n  padding-top: 0.25em !important;\n}\n.duckform .pt-2, .duckform .py-2 {\n  padding-top: 0.5em !important;\n}\n.duckform .pt-3, .duckform .py-3 {\n  padding-top: 0.75em !important;\n}\n.duckform .pt-4, .duckform .py-4 {\n  padding-top: 1em !important;\n}\n.duckform .pb-0, .duckform .py-0 {\n  padding-bottom: 0 !important;\n}\n.duckform .pb-1, .duckform .py-1 {\n  padding-bottom: 0.25em !important;\n}\n.duckform .pb-2, .duckform .py-2 {\n  padding-bottom: 0.5em !important;\n}\n.duckform .pb-3, .duckform .py-3 {\n  padding-bottom: 0.75em !important;\n}\n.duckform .pb-4, .duckform .py-4 {\n  padding-bottom: 1em !important;\n}\n.duckform .pl-0, .duckform .px-0 {\n  padding-left: 0 !important;\n}\n.duckform .pl-1, .duckform .px-1 {\n  padding-left: 0.25em !important;\n}\n.duckform .pl-2, .duckform .px-2 {\n  padding-left: 0.5em !important;\n}\n.duckform .pl-3, .duckform .px-3 {\n  padding-left: 0.75em !important;\n}\n.duckform .pl-4, .duckform .px-4 {\n  padding-left: 1em !important;\n}\n.duckform .pr-0, .duckform .px-0 {\n  padding-right: 0 !important;\n}\n.duckform .pr-1, .duckform .px-1 {\n  padding-right: 0.25em !important;\n}\n.duckform .pr-2, .duckform .px-2 {\n  padding-right: 0.5em !important;\n}\n.duckform .pr-3, .duckform .px-3 {\n  padding-right: 0.75em !important;\n}\n.duckform .pr-4, .duckform .px-4 {\n  padding-right: 1em !important;\n}\n.duckform .mt-0, .duckform .my-0 {\n  margin-top: 0 !important;\n}\n.duckform .mt-1, .duckform .my-1 {\n  margin-top: 0.25em !important;\n}\n.duckform .mt-2, .duckform .my-2 {\n  margin-top: 0.5em !important;\n}\n.duckform .mt-3, .duckform .my-3 {\n  margin-top: 0.75em !important;\n}\n.duckform .mt-4, .duckform .my-4 {\n  margin-top: 1em !important;\n}\n.duckform .mb-0, .duckform .my-0 {\n  margin-bottom: 0 !important;\n}\n.duckform .mb-1, .duckform .my-1 {\n  margin-bottom: 0.25em !important;\n}\n.duckform .mb-2, .duckform .my-2 {\n  margin-bottom: 0.5em !important;\n}\n.duckform .mb-3, .duckform .my-3 {\n  margin-bottom: 0.75em !important;\n}\n.duckform .mb-4, .duckform .my-4 {\n  margin-bottom: 1em !important;\n}\n.duckform .ml-0, .duckform .mx-0 {\n  margin-left: 0 !important;\n}\n.duckform .ml-1, .duckform .mx-1 {\n  margin-left: 0.25em !important;\n}\n.duckform .ml-2, .duckform .mx-2 {\n  margin-left: 0.5em !important;\n}\n.duckform .ml-3, .duckform .mx-3 {\n  margin-left: 0.75em !important;\n}\n.duckform .ml-4, .duckform .mx-4 {\n  margin-left: 1em !important;\n}\n.duckform .mr-0, .duckform .mx-0 {\n  margin-right: 0 !important;\n}\n.duckform .mr-1, .duckform .mx-1 {\n  margin-right: 0.25em !important;\n}\n.duckform .mr-2, .duckform .mx-2 {\n  margin-right: 0.5em !important;\n}\n.duckform .mr-3, .duckform .mx-3 {\n  margin-right: 0.75em !important;\n}\n.duckform .mr-4, .duckform .mx-4 {\n  margin-right: 1em !important;\n}\n.duckform a {\n  transition-duration: 0.4s;\n}\n.duckform fieldset {\n  border-bottom: 1px solid #ccc;\n  border-left: 0;\n  border-right: 0;\n  border-top: 0;\n  padding: 0 0 25px 0;\n  margin: 20px 20px 10px 20px;\n}\n.duckform button {\n  transition-duration: 0.4s;\n}\n.duckform button:focus {\n  outline: none;\n}\n.duckform button:not([disabled]) {\n  cursor: pointer;\n}\n.duckform .button {\n  background-color: #edaca0;\n  border: none;\n  color: #fff;\n  display: inline-block;\n  font-size: 1.4rem;\n  padding: 15px 30px;\n  text-decoration: none;\n  border: 1px solid #fff;\n}\n.duckform .button[disabled] {\n  background-color: #A5AFA5;\n}\n.duckform .button:not([disabled]):hover {\n  background-color: #fff;\n  color: #000;\n  border: 1px solid #000;\n}\n.duckform .button.orange {\n  background-color: #FF5900;\n}\n.duckform .button.orange:hover {\n  background-color: #004D50;\n}\n.duckform .input label {\n  align-items: flex-start;\n  cursor: pointer;\n  display: flex;\n}\n.duckform .input input[type=text],\n.duckform .input input[type=number],\n.duckform .input input[type=date] {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  border-radius: 5px;\n  border: 0;\n  background-color: #8ec0ed30;\n  box-shadow: none;\n  box-sizing: border-box;\n  display: block;\n  padding: 5px 10px;\n}\n.duckform .input input[type=text]:focus,\n.duckform .input input[type=number]:focus,\n.duckform .input input[type=date]:focus {\n  outline: none;\n  transition-duration: 0.4s;\n}\n.duckform .input input.other {\n  display: inline-block;\n}\n.duckform .content {\n  flex: 1 0 0;\n  padding: 25px 0 25px 0;\n  margin: 0 auto;\n}\n.duckform .control {\n  padding: 20px 0;\n  text-align: center;\n}\n.duckform .control button.back {\n  background-color: transparent;\n  border: 1px solid #ccc;\n  color: #ccc;\n}\n.duckform .control button.back:hover {\n  background-color: transparent !important;\n  border-color: #000;\n  color: #000;\n}\n.duckform .progress {\n  display: flex;\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  top: 0;\n  z-index: 1;\n}\n.duckform .progress li {\n  flex-grow: 1;\n  font-size: 12px;\n  text-align: center;\n  transition-duration: 0.4s;\n  border-top: 7px solid #555;\n  opacity: 0.25;\n}\n.duckform .progress li.active {\n  opacity: 1;\n  border-top-color: #0055ff;\n}\n\n/*# sourceMappingURL=Duckform.vue.map */"]}, media: undefined });
 
     };
     /* scoped */
