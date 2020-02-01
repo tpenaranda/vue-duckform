@@ -16,7 +16,7 @@
       </label>
     </li>
     <validation-provider :rules="rules" v-slot="{ errors }" :name="value.text">
-      <input type="text" v-model="selectedAnswerId" style="display: none;">
+      <input type="text" v-model="value.possible_answers_selected" style="display: none;">
       <p class="text-danger small">{{ errors.join(' ') }}</p>
     </validation-provider>
   </ul>

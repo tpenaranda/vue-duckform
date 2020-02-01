@@ -1,6 +1,6 @@
 <template>
   <div class="input">
-    <validation-provider ref="validationProvider" :rules="{ required: true, regex: /^\d{2}-\d{2}-\d{4}$/ }" v-slot="{ errors }" :name="value.text" >
+    <validation-provider ref="validationProvider" :rules="{ required: value.required, regex: /^\d{2}-\d{2}-\d{4}$/ }" v-slot="{ errors }" :name="value.text" >
       <date-pick ref="datePicker"
         v-model="value.possible_answers_selected[0].data"
         :isDateDisabled="isFutureDate"

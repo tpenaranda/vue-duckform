@@ -10,6 +10,9 @@
         <h1 class="text-center">Ups, there was an error loading the form.</h1>
       </slot>
     </div>
+    <div v-else-if="!form.sections || !form.sections.length">
+      <h1 class="text-center">There are no sections defined on this form.</h1>
+    </div>
     <div v-else>
       <validation-observer ref="validationObserver" v-slot="slotProps">
         <main class="content">
@@ -26,7 +29,7 @@
               <h2 class="text-center pb-3">{{ currentSection.title }}</h2>
               <h3 v-if="currentSection.description">{{ currentSection.description }}</h3>
             </header>
-            <section>
+            <section v-if="currentSection.questions && currentSection.questions.length">
               <fieldset v-for="(question, questionIndex) in currentSection.questions" :key="`S${currentSectionIndex}|Q${questionIndex}`">
                 <header>
                   <div class="statement pb-1">{{ question.text }}<span v-if="question.required" class="text-danger small"> *</span></div>
@@ -48,6 +51,9 @@
                 </span>
               </fieldset>
             </section>
+            <div v-else>
+              <h3>No questions defined on this section.</h3>
+            </div>
             <div v-if="!disabled" class="control">
               <div v-if="validationFailed && slotProps.invalid" class="small text-danger mb-4">
                 <p class="pb-2">Please complete the following questions:</p>
@@ -105,7 +111,7 @@
     props: {
       formData: {
         type: Object,
-        default: () => { return { sections: [] } }
+        default: () => { return {} }
       },
       formDataEndpoint: {
         type: String,
@@ -117,11 +123,15 @@
       },
       submitData: {
         type: Object,
-        default: () => { return { sections: [] } }
+        default: () => { return {} }
       },
       submitId: {
         type: [Number, String],
         default: null
+      },
+      value: {
+        type: Object,
+        default: () => { return {} }
       },
     },
     computed: {
@@ -178,15 +188,20 @@
       },
       proccessFormSections () {
         this.form.sections = _.sortBy(this.form.sections, (i) => i.order || 0).map((section) => {
-          section.questions.map((question) => {
-            question.possible_answers = _.sortBy(question.possible_answers, (i) => i.order || 0)
-            this.$set(question, 'possible_answers_selected', [])
-            return question
-          })
+          if (section.questions) {
+            section.questions.map((question) => {
+              question.possible_answers = _.sortBy(question.possible_answers, (i) => i.order || 0)
+              this.$set(question, 'possible_answers_selected', [])
+              return question
+            })
+          }
           return section
         })
       },
       mergeSubmitData() {
+        if (!this.submit.sections || !this.submit.sections.length) {
+          return null
+        }
         const savedSectionsArranged = _.keyBy(this.submit.sections.map((section) => {
           section.questions = _.keyBy(section.questions, 'id')
           return section
@@ -211,6 +226,9 @@
               this.currentSectionIndex++
               this.$refs.surveyTop.scrollIntoView()
             }
+          }).finally(() => {
+            this.$emit('input', this.form)
+            this.$emit('save')
           })
         })
       },
@@ -220,7 +238,7 @@
           this.$refs.surveyTop.scrollIntoView()
         }
       },
-      save () {
+      saveToApi () {
         this.savingData = true
         const responseHandler = (response) => {
           this.submit = response.data.data
@@ -232,10 +250,25 @@
         }
 
         if (this.submit.token) {
-          return axios.patch(`${this.formDataEndpoint}/submits/${this.submit.token}`, { data: this.form }).then(responseHandler).finally(() => { this.savingData = false })
+          return axios.patch(`${this.formDataEndpoint}/submits/${this.submit.token}`, { data: this.form }).then(responseHandler).finally(() => {
+            this.savingData = false
+          })
         }
 
-        return axios.post(`${this.formDataEndpoint}/submits`, { data: this.form }).then(responseHandler).finally(() => { this.savingData = false })
+        return axios.post(`${this.formDataEndpoint}/submits`, { data: this.form }).then(responseHandler).finally(() => {
+          this.savingData = false
+        })
+      },
+      save () {
+        if (!_.isEmpty(this.formDataEndpoint)) {
+          return this.saveToApi()
+        }
+
+        if (this.isLastSection) {
+          this.formSubmitted = true
+        }
+
+        return new Promise((resolve) => resolve())
       }
     }
   }
@@ -244,6 +277,188 @@
 <style lang="scss">
   .duckform {
     font-size: 1rem;
+    text-align: left;
+
+    p {
+        margin: 3px 0;
+    }
+
+    header h3 {
+      margin-left: 20px;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .shadow {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .bg-white {
+      background-color: #fff !important;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+    .text-right {
+      text-align: right !important;
+    }
+    .text-left {
+      text-align: left !important;
+    }
+
+    .text-danger {
+      color: #dc3545 !important;
+    }
+
+    .list-unstyled {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .small {
+        font-size: .75em;
+    }
+
+    .w-25 {
+      width: 25% !important;
+    }
+    .w-50 {
+      width: 50% !important;
+    }
+    .w-100 {
+      width: 100% !important;
+    }
+
+    .pt-0, .py-0 {
+        padding-top: 0 !important;
+    }
+    .pt-1, .py-1 {
+        padding-top: .25em !important;
+    }
+    .pt-2, .py-2 {
+        padding-top: .5em !important;
+    }
+    .pt-3, .py-3 {
+        padding-top: .75em !important;
+    }
+    .pt-4, .py-4 {
+        padding-top: 1em !important;
+    }
+
+    .pb-0, .py-0 {
+        padding-bottom: 0 !important;
+    }
+    .pb-1, .py-1 {
+        padding-bottom: .25em !important;
+    }
+    .pb-2, .py-2 {
+        padding-bottom: .5em !important;
+    }
+    .pb-3, .py-3 {
+        padding-bottom: .75em !important;
+    }
+    .pb-4, .py-4 {
+        padding-bottom: 1em !important;
+    }
+
+    .pl-0, .px-0 {
+        padding-left: 0 !important;
+    }
+    .pl-1, .px-1 {
+        padding-left: .25em !important;
+    }
+    .pl-2, .px-2 {
+        padding-left: .5em !important;
+    }
+    .pl-3, .px-3 {
+        padding-left: .75em !important;
+    }
+    .pl-4, .px-4 {
+        padding-left: 1em !important;
+    }
+
+    .pr-0, .px-0 {
+        padding-right: 0 !important;
+    }
+    .pr-1, .px-1 {
+        padding-right: .25em !important;
+    }
+    .pr-2, .px-2 {
+        padding-right: .5em !important;
+    }
+    .pr-3, .px-3 {
+        padding-right: .75em !important;
+    }
+    .pr-4, .px-4 {
+        padding-right: 1em !important;
+    }
+
+    .mt-0, .my-0 {
+        margin-top: 0 !important;
+    }
+    .mt-1, .my-1 {
+        margin-top: .25em !important;
+    }
+    .mt-2, .my-2 {
+        margin-top: .5em !important;
+    }
+    .mt-3, .my-3 {
+        margin-top: .75em !important;
+    }
+    .mt-4, .my-4 {
+        margin-top: 1em !important;
+    }
+
+    .mb-0, .my-0 {
+        margin-bottom: 0 !important;
+    }
+    .mb-1, .my-1 {
+        margin-bottom: .25em !important;
+    }
+    .mb-2, .my-2 {
+        margin-bottom: .5em !important;
+    }
+    .mb-3, .my-3 {
+        margin-bottom: .75em !important;
+    }
+    .mb-4, .my-4 {
+        margin-bottom: 1em !important;
+    }
+
+    .ml-0, .mx-0 {
+        margin-left: 0 !important;
+    }
+    .ml-1, .mx-1 {
+        margin-left: .25em !important;
+    }
+    .ml-2, .mx-2 {
+        margin-left: .5em !important;
+    }
+    .ml-3, .mx-3 {
+        margin-left: .75em !important;
+    }
+    .ml-4, .mx-4 {
+        margin-left: 1em !important;
+    }
+
+    .mr-0, .mx-0 {
+        margin-right: 0 !important;
+    }
+    .mr-1, .mx-1 {
+        margin-right: .25em !important;
+    }
+    .mr-2, .mx-2 {
+        margin-right: .5em !important;
+    }
+    .mr-3, .mx-3 {
+        margin-right: .75em !important;
+    }
+    .mr-4, .mx-4 {
+        margin-right: 1em !important;
+    }
 
     a {
       transition-duration: .4s
@@ -323,28 +538,10 @@
       }
     }
 
-    .header {
-      border-bottom: 1px solid #ddd;
-      text-align: center;
-      width: 100%;
-      @media (min-width: 1000px) {
-        text-align: left;
-      }
-      .center {
-        padding: 0 30px;
-      }
-      img {
-        height: auto;
-        width: 150px;
-        margin: 15px 0;
-      }
-    }
-
     .content {
       flex: 1 0 0;
       padding: 25px 0 25px 0;
       margin: 0 auto;
-      max-width: 850px;
     }
 
     .control {
@@ -380,7 +577,7 @@
         opacity: 0.25;
         &.active {
           opacity: 1;
-          border-top-color: #0000ff;
+          border-top-color: #0055ff;
         }
       }
     }
