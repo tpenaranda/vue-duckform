@@ -2,65 +2,75 @@
   <div class="duckform">
     <div v-if="loadingData">
       <slot name="loading" v-bind:form="form">
-        <h1 class="text-center">{{ form.title || 'Loading...' }}</h1>
+        <p class="df-title df-tc">{{ form.title || 'Loading...' }}</p>
       </slot>
     </div>
     <div v-else-if="errorLoading">
       <slot name="errorLoading" v-bind:form="form">
-        <h1 class="text-center">Ups, there was an error loading the form.</h1>
+        <p class="df-title df-tc">Ups, there was an error loading the form.</p>
       </slot>
     </div>
     <div v-else-if="!form.sections || !form.sections.length">
-      <h1 class="text-center">There are no sections defined on this form.</h1>
+      <p class="df-title df-tc">There are no sections defined on this form.</p>
     </div>
     <div v-else>
       <validation-observer ref="validationObserver" v-slot="slotProps">
-        <main class="content">
+        <main class="df-content">
           <slot name="completed" v-if="formSubmitted" v-bind:survey="form">
-            <h1 class="text-center">Thanks!</h1>
-            <h2 class="text-center">Form was submitted correctly.</h2>
+            <p class="df-title df-tc">Thanks!</p>
+            <p class="df-subtitle df-tc">Form is completed.</p>
           </slot>
-          <form v-else ref="surveyTop">
-            <h1 v-if="form.title" style="font-size: 2em" class="text-center">{{ form.title }}</h1>
-            <ul v-if="!disabled" class="progress list-unstyled">
-              <li v-for="(section, index) in form.sections" :class="{'active': index <= currentSectionIndex}"></li>
+          <form v-else>
+            <p v-if="form.title" class="df-title df-tc">{{ form.title }}</p>
+            <ul v-if="!disabled" class="df-progress df-list-unstyled">
+              <li v-for="(section, index) in form.sections" :class="{'df-active': index <= currentSectionIndex}"></li>
             </ul>
             <header>
-              <h2 class="text-center pb-3">{{ currentSection.title }}</h2>
-              <h3 v-if="currentSection.description">{{ currentSection.description }}</h3>
+              <p class="df-subtitle df-tc df-pb-4">{{ currentSection.title }}</p>
+              <p v-if="currentSection.description"><strong>{{ currentSection.description }}</strong></p>
             </header>
             <section v-if="currentSection.questions && currentSection.questions.length">
               <fieldset v-for="(question, questionIndex) in currentSection.questions" :key="`S${currentSectionIndex}|Q${questionIndex}`">
                 <header>
-                  <div class="statement pb-1">{{ question.text }}<span v-if="question.required" class="text-danger small"> *</span></div>
+                  <div class="df-pb-1">{{ question.text }}<span v-if="question.required" class="df-td df-small"> *</span></div>
                 </header>
-                <span v-if="question.type === 'multiselect'">
-                  <checkbox-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></checkbox-question>
-                </span>
-                <span v-if="question.type === 'scale'">
-                  <scale-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></scale-question>
-                </span>
-                <span v-if="question.type === 'date'">
-                  <date-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></date-question>
-                </span>
-                <span v-if="['free_text', 'integer'].indexOf(question.type) >= 0">
-                  <input-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></input-question>
-                </span>
-                <span v-if="['single_select', 'yes_no'].indexOf(question.type) >= 0">
-                  <radio-question v-model="currentSection.questions[questionIndex]" :disabled="disabled"></radio-question>
-                </span>
+                <checkbox-question v-if="question.type === 'multiselect'"
+                  v-model="currentSection.questions[questionIndex]"
+                  :disabled="disabled"
+                  @input="handleQuestionInput">
+                </checkbox-question>
+                <scale-question v-if="question.type === 'scale'"
+                  v-model="currentSection.questions[questionIndex]"
+                  :disabled="disabled"
+                  @input="handleQuestionInput">
+                </scale-question>
+                <date-question v-if="question.type === 'date'"
+                  v-model="currentSection.questions[questionIndex]"
+                  :disabled="disabled"
+                  @input="handleQuestionInput">
+                </date-question>
+                <input-question v-if="['free_text', 'integer'].indexOf(question.type) >= 0"
+                  v-model="currentSection.questions[questionIndex]"
+                  :disabled="disabled"
+                  @input="handleQuestionInput">
+                </input-question>
+                <radio-question v-if="['single_select', 'yes_no'].indexOf(question.type) >= 0"
+                  v-model="currentSection.questions[questionIndex]"
+                  :disabled="disabled"
+                  @input="handleQuestionInput">
+                </radio-question>
               </fieldset>
             </section>
             <div v-else>
-              <h3>No questions defined on this section.</h3>
+              <p><strong>No questions defined on this section.</strong></p>
             </div>
-            <div v-if="!disabled" class="control">
-              <div v-if="validationFailed && slotProps.invalid" class="small text-danger mb-4">
-                <p class="pb-2">Please complete the following questions:</p>
+            <div v-if="!disabled" class="df-control">
+              <div v-if="validationFailed && slotProps.invalid" class="df-small df-td df-mb-4">
+                <p>Please complete the following questions:</p>
                 <p v-for="errorText in filterArray(slotProps.errors)">{{ errorText }}.</p>
               </div>
-              <button v-if="currentSectionIndex > 0" class="button back" type="button" @click="prevSection">Back</button>
-              <button class="button mt-3" type="button" @click="nextSection">
+              <button v-if="currentSectionIndex > 0" class="df-button df-back" type="button" @click="prevSection">Back</button>
+              <button class="df-button df-mt-3" type="button" @click="nextSection">
                 <span v-if="isLastSection">{{ savingData ? 'Submitting...' : 'Submit' }}</span>
                 <span v-else>{{ savingData ? 'Saving...' : 'Continue' }}</span>
               </button>
@@ -79,8 +89,9 @@
   import ScaleQuestion from './components/Questions/Scale.vue'
   import DateQuestion from './components/Questions/Date.vue'
 
-  import axios from 'axios'
   import _ from 'lodash'
+  import axios from 'axios'
+  import moment from 'moment';
   import { ValidationObserver } from 'vee-validate'
 
   export default {
@@ -153,6 +164,9 @@
       }
     },
     methods: {
+      handleQuestionInput (question) {
+        this.$emit('input', this.form)
+      },
       filterArray(errors) {
         const errorIndexes = Object.values(errors).map((v, k) => { return v.length ? k : null }).filter((i) => i !== null)
 
@@ -224,18 +238,15 @@
           this.save().then(() => {
             if (this.currentSectionIndex + 1 < this.form.sections.length) {
               this.currentSectionIndex++
-              this.$refs.surveyTop.scrollIntoView()
             }
           }).finally(() => {
-            this.$emit('input', this.form)
-            this.$emit('save')
+            this.$emit('save', this.form)
           })
         })
       },
       prevSection () {
         if (this.currentSectionIndex > 0) {
           this.currentSectionIndex--
-          this.$refs.surveyTop.scrollIntoView()
         }
       },
       saveToApi () {
@@ -265,6 +276,7 @@
         }
 
         if (this.isLastSection) {
+          this.form.completed_at = moment().toISOString()
           this.formSubmitted = true
         }
 
@@ -279,187 +291,6 @@
     font-size: 1rem;
     text-align: left;
 
-    p {
-        margin: 3px 0;
-    }
-
-    header h3 {
-      margin-left: 20px;
-    }
-
-    .row {
-        display: flex;
-    }
-
-    .shadow {
-      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    }
-
-    .bg-white {
-      background-color: #fff !important;
-    }
-
-    .text-center {
-      text-align: center !important;
-    }
-    .text-right {
-      text-align: right !important;
-    }
-    .text-left {
-      text-align: left !important;
-    }
-
-    .text-danger {
-      color: #dc3545 !important;
-    }
-
-    .list-unstyled {
-      padding-left: 0;
-      list-style: none;
-    }
-
-    .small {
-        font-size: .75em;
-    }
-
-    .w-25 {
-      width: 25% !important;
-    }
-    .w-50 {
-      width: 50% !important;
-    }
-    .w-100 {
-      width: 100% !important;
-    }
-
-    .pt-0, .py-0 {
-        padding-top: 0 !important;
-    }
-    .pt-1, .py-1 {
-        padding-top: .25em !important;
-    }
-    .pt-2, .py-2 {
-        padding-top: .5em !important;
-    }
-    .pt-3, .py-3 {
-        padding-top: .75em !important;
-    }
-    .pt-4, .py-4 {
-        padding-top: 1em !important;
-    }
-
-    .pb-0, .py-0 {
-        padding-bottom: 0 !important;
-    }
-    .pb-1, .py-1 {
-        padding-bottom: .25em !important;
-    }
-    .pb-2, .py-2 {
-        padding-bottom: .5em !important;
-    }
-    .pb-3, .py-3 {
-        padding-bottom: .75em !important;
-    }
-    .pb-4, .py-4 {
-        padding-bottom: 1em !important;
-    }
-
-    .pl-0, .px-0 {
-        padding-left: 0 !important;
-    }
-    .pl-1, .px-1 {
-        padding-left: .25em !important;
-    }
-    .pl-2, .px-2 {
-        padding-left: .5em !important;
-    }
-    .pl-3, .px-3 {
-        padding-left: .75em !important;
-    }
-    .pl-4, .px-4 {
-        padding-left: 1em !important;
-    }
-
-    .pr-0, .px-0 {
-        padding-right: 0 !important;
-    }
-    .pr-1, .px-1 {
-        padding-right: .25em !important;
-    }
-    .pr-2, .px-2 {
-        padding-right: .5em !important;
-    }
-    .pr-3, .px-3 {
-        padding-right: .75em !important;
-    }
-    .pr-4, .px-4 {
-        padding-right: 1em !important;
-    }
-
-    .mt-0, .my-0 {
-        margin-top: 0 !important;
-    }
-    .mt-1, .my-1 {
-        margin-top: .25em !important;
-    }
-    .mt-2, .my-2 {
-        margin-top: .5em !important;
-    }
-    .mt-3, .my-3 {
-        margin-top: .75em !important;
-    }
-    .mt-4, .my-4 {
-        margin-top: 1em !important;
-    }
-
-    .mb-0, .my-0 {
-        margin-bottom: 0 !important;
-    }
-    .mb-1, .my-1 {
-        margin-bottom: .25em !important;
-    }
-    .mb-2, .my-2 {
-        margin-bottom: .5em !important;
-    }
-    .mb-3, .my-3 {
-        margin-bottom: .75em !important;
-    }
-    .mb-4, .my-4 {
-        margin-bottom: 1em !important;
-    }
-
-    .ml-0, .mx-0 {
-        margin-left: 0 !important;
-    }
-    .ml-1, .mx-1 {
-        margin-left: .25em !important;
-    }
-    .ml-2, .mx-2 {
-        margin-left: .5em !important;
-    }
-    .ml-3, .mx-3 {
-        margin-left: .75em !important;
-    }
-    .ml-4, .mx-4 {
-        margin-left: 1em !important;
-    }
-
-    .mr-0, .mx-0 {
-        margin-right: 0 !important;
-    }
-    .mr-1, .mx-1 {
-        margin-right: .25em !important;
-    }
-    .mr-2, .mx-2 {
-        margin-right: .5em !important;
-    }
-    .mr-3, .mx-3 {
-        margin-right: .75em !important;
-    }
-    .mr-4, .mx-4 {
-        margin-right: 1em !important;
-    }
-
     a {
       transition-duration: .4s
     }
@@ -470,7 +301,7 @@
       border-right: 0;
       border-top: 0;
       padding: 0 0 25px 0;
-      margin: 20px 20px 10px 20px;
+      margin: 10px 20px;
     }
 
     button {
@@ -479,8 +310,117 @@
       &:not([disabled]) { cursor: pointer; }
     }
 
-    .button {
-      background-color: #edaca0;
+    label {
+      display: block;
+      margin-bottom: 0;
+    }
+
+    p {
+        margin: 3px 0;
+    }
+
+    header p strong {
+      margin-left: 20px;
+    }
+
+    .df-title {
+      font-size: 1.75rem;
+    }
+
+    .df-subtitle {
+      font-size: 1.25rem;
+    }
+
+    .df-row {
+        display: flex;
+    }
+
+    .df-tc {
+      text-align: center !important;
+    }
+
+    .df-tr {
+      text-align: right !important;
+    }
+
+    .df-tl {
+      text-align: left !important;
+    }
+
+    .df-td {
+      color: #dc3545 !important;
+    }
+
+    .df-list-unstyled {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .df-small {
+      font-size: .75em;
+    }
+
+    .df-w-25 {
+      width: 25% !important;
+    }
+
+    .df-w-50 {
+      width: 50% !important;
+    }
+
+    .df-w-100 {
+      width: 100% !important;
+    }
+
+    .df-py-1 {
+        padding-top: .25em !important;
+    }
+
+    .df-pb-1, .df-py-1 {
+        padding-bottom: .25em !important;
+    }
+
+    .df-pb-2 {
+        padding-bottom: .5em !important;
+    }
+
+    .df-pb-3 {
+        padding-bottom: .75em !important;
+    }
+
+    .df-pb-4 {
+        padding-bottom: 1em !important;
+    }
+
+    .df-pl-1 {
+        padding-left: .25em !important;
+    }
+
+    .df-pl-2 {
+        padding-left: .5em !important;
+    }
+
+    .df-mt-3 {
+        margin-top: .75em !important;
+    }
+
+    .df-mb-0 {
+        margin-bottom: 0 !important;
+    }
+
+    .df-mb-2 {
+        margin-bottom: .5em !important;
+    }
+    .df-mb-4 {
+        margin-bottom: 1em !important;
+    }
+
+    .df-ml-2 {
+        margin-left: .5em !important;
+    }
+
+    .df-button {
+      background-color: #8ec0ed;
       border: none;
       color: #fff;
       display: inline-block;
@@ -490,25 +430,16 @@
       border: 1px solid #fff;
 
       &[disabled] {
-        background-color: #A5AFA5;
+        background-color: #dbebf9;
       }
       &:not([disabled]):hover {
         background-color: #fff;
         color: #000;
         border: 1px solid #000;
       }
-      &.orange {
-        background-color: #FF5900;
-      }
-      &.orange:hover {
-        background-color: #004D50;
-      }
     }
 
-    .statement {
-
-    }
-    .input {
+    .df-input, .df-date {
       label {
         align-items: flex-start;
         cursor: pointer;
@@ -538,13 +469,13 @@
       }
     }
 
-    .content {
+    .df-content {
       flex: 1 0 0;
       padding: 25px 0 25px 0;
       margin: 0 auto;
     }
 
-    .control {
+    .df-control {
       padding: 20px 0;
       text-align: center;
 
@@ -560,7 +491,7 @@
       }
     }
 
-    .progress {
+    .df-progress {
       display: flex;
       margin: 0;
       position: fixed;
@@ -575,9 +506,150 @@
         transition-duration: .4s;
         border-top: 7px solid #555;
         opacity: 0.25;
-        &.active {
+        &.df-active {
           opacity: 1;
           border-top-color: #0055ff;
+        }
+      }
+    }
+
+    .df-scale {
+      .df-selection {
+        display: flex;
+      }
+      .range-slider-inner {
+        min-width: 80px;
+      }
+      .range-slider {
+        box-sizing: border-box;
+        display: block;
+        height: 40px;
+        margin-bottom: 10px;
+        width: 100%;
+
+        .range-slider-knob {
+          background-color: #8ec0ed;
+          border: none;
+          height: 25px;
+          width: 25px;
+        }
+
+        input[type="text"] {
+          background: transparent;
+          border: none;
+          color: #004D50;
+          cursor: default;
+          font-size: 1rem;
+          padding-top: 40px;
+          text-align: center;
+          user-select: none;
+        }
+        .range-slider-fill {
+          background-color: #8ec0ed30;
+          border-radius: 25px;
+          height: 25px;
+        }
+        .range-slider-rail {
+          background-color: #e7e9e730;
+          border-radius: 25px;
+          height: 25px;
+        }
+      }
+    }
+
+    .vdpClearInput {
+      display: none;
+    }
+    .vdpCellContent {
+      font-size: 13px;
+    }
+    .vdpComponent {
+      width: 100%;
+
+      input {
+        font-size: 16px;
+        width: 100%;
+      }
+    }
+
+    .df-radio {
+      $marker-size: 19px;
+
+      .df-selector {
+        display: inline-block;
+
+        input {
+          display: none;
+        }
+
+        .df-marker {
+          align-items: center;
+          border-radius: $marker-size;
+          border: 1px solid #adc0c480;
+          display: flex;
+          height: $marker-size;
+          justify-content: center;
+          position: relative;
+          transition-duration: .4s;
+          width: $marker-size;
+        }
+        input:checked ~ .df-marker {
+          background-color: #8ec0ed;
+          border-color: #8ec0ed;
+        }
+        label:hover {
+          .df-marker {
+            border-color: #adc0c4;
+          }
+        }
+      }
+    }
+
+    .df-checkbox {
+      $marker-size: 19px;
+
+      .df-selector {
+        display: inline-block;
+        input[type="checkbox"],
+        input[type="radio"] {
+          display: none;
+        }
+        .df-marker {
+          align-items: center;
+          border-radius: $marker-size;
+          border: 1px solid #adc0c480;
+          display: flex;
+          height: $marker-size;
+          justify-content: center;
+          position: relative;
+          transition-duration: .4s;
+          width: $marker-size;
+        }
+        .df-icon {
+          position: absolute;
+          top: -25px;
+          left: -12px;
+          transform: scale(0);
+          transition-duration: .4s;
+        }
+        input:checked ~ .df-marker {
+          border-color: #8ec0ed;
+          .df-icon {
+            transform: scale(.5);
+          }
+        }
+        input[type='radio']:checked ~ .df-marker {
+          background-color: #8ec0ed;
+        }
+
+        .df-label {
+          padding: 0 0 0 10px;
+        }
+
+        label:hover {
+          .df-marker {
+            border-color: #adc0c4;
+          }
         }
       }
     }

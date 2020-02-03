@@ -1,5 +1,5 @@
 <template>
-  <div class="input">
+  <div class="df-date">
     <validation-provider ref="validationProvider" :rules="{ required: value.required, regex: /^\d{2}-\d{2}-\d{4}$/ }" v-slot="{ errors }" :name="value.text" >
       <date-pick ref="datePicker"
         v-model="value.possible_answers_selected[0].data"
@@ -9,7 +9,7 @@
         format="MM-DD-YYYY"
         @change="dateSelected">
       </date-pick>
-      <p class="text-danger small">{{ errors.join(' ') }}</p>
+      <p class="df-small df-td">{{ errors.join(' ') }}</p>
     </validation-provider>
   </div>
 </template>
@@ -59,24 +59,8 @@ export default {
     dateSelected(date) {
       this.$refs.validationProvider.validate()
       this.value.possible_answers_selected = [{ id: this.value.possible_answers[0].id, data: date }]
+      this.$emit('input', this.value)
     }
   }
 }
 </script>
-
-<style lang="scss">
-  .vdpClearInput {
-    display: none;
-  }
-  .vdpCellContent {
-    font-size: 13px;
-  }
-  .vdpComponent {
-    width: 100%;
-
-    input {
-      font-size: 16px;
-      width: 100%;
-    }
-  }
-</style>

@@ -1,8 +1,8 @@
 <template>
-  <ul class="list-unstyled" :class="`_${value.type}`">
+  <ul class="df-checkbox df-list-unstyled">
     <li v-for="(answer, answerIndex) in value.possible_answers" :key="answer.id">
-      <label class="row">
-        <div class="selector py-1">
+      <label class="df-row">
+        <div class="df-selector df-py-1">
           <input type="checkbox"
             :checked="isSelected(answer.id)"
             :disabled="disabled"
@@ -10,21 +10,21 @@
             :name="`Q${value.id}`"
             @change="handleInputChange(answer.id)"
           >
-          <span class="marker checkbox"><img src="./../../assets/images/check.png" class="icon"></span>
+          <span class="df-marker"><img src="./../../assets/images/check.png" class="df-icon"></span>
         </div>
-        <span v-if="answer.text.toLowerCase() === 'other' && isSelected(answer.id)" class="input">
-          <input class="ml-2" type="text" v-model="otherText" @input="setAnswerData(answer.id, otherText)">
+        <span v-if="answer.text.toLowerCase() === 'other' && isSelected(answer.id)" class="df-input">
+          <input class="df-ml-2" type="text" v-model="otherText" @input="setAnswerData(answer.id, otherText)">
         </span>
-        <span v-else class="label pl-2 py-1">{{ answer.text }}</span>
+        <span v-else class="df-label df-pl-2 df-py-1">{{ answer.text }}</span>
       </label>
     </li>
       <validation-provider :rules="value.required ? 'required' : null" v-slot="{ errors }" :name="value.text">
         <input type="text" v-model="value.possible_answers_selected" style="display: none;">
-        <p class="small text-danger">{{ errors.join(' ') }}</p>
+        <p class="df-small df-td">{{ errors.join(' ') }}</p>
       </validation-provider>
       <validation-provider :rules="getOtherAnswerSelected() ? 'required' : null" v-slot="{ errors }" :name="`${value.text} (Specify)`" :custom-messages="{required: 'Please specify'}" immediate>
         <input type="text" v-model="otherText" style="display: none;">
-        <p class="small text-danger">{{ errors.join(' ') }}</p>
+        <p class="df-small df-td">{{ errors.join(' ') }}</p>
       </validation-provider>
   </ul>
 </template>
@@ -88,60 +88,13 @@
             this.otherText = null
           }
 
-          return this.value.possible_answers_selected = this.value.possible_answers_selected.filter(o => o.id !== id)
+          this.value.possible_answers_selected = this.value.possible_answers_selected.filter(o => o.id !== id)
+        } else {
+          this.value.possible_answers_selected = this.value.possible_answers_selected.concat({ id: id, data: data })
         }
 
-        return this.value.possible_answers_selected = this.value.possible_answers_selected.concat({ id: id, data: data })
+        this.$emit('input', this.value)
       }
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  $marker-size: 19px;
-
-  .selector {
-    display: inline-block;
-    input[type="checkbox"],
-    input[type="radio"] {
-      display: none;
-    }
-    .marker {
-      align-items: center;
-      border-radius: $marker-size;
-      border: 1px solid #adc0c480;
-      display: flex;
-      height: $marker-size;
-      justify-content: center;
-      position: relative;
-      transition-duration: .4s;
-      width: $marker-size;
-    }
-    .icon {
-      position: absolute;
-      top: -25px;
-      left: -12px;
-      transform: scale(0);
-      transition-duration: .4s;
-    }
-    input:checked ~ .marker {
-      border-color: #8ec0ed;
-      .icon {
-        transform: scale(.5);
-      }
-    }
-    input[type='radio']:checked ~ .marker {
-      background-color: #8ec0ed;
-    }
-
-    .label {
-      padding: 0 0 0 10px;
-    }
-
-    label:hover {
-      .marker {
-        border-color: #adc0c4;
-      }
-    }
-  }
-</style>

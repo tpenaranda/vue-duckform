@@ -1,18 +1,18 @@
 <template>
   <label>
-    <div class="input">
+    <div class="df-input">
       <validation-provider :rules="rules.join('|')" :name="value.text" v-slot="slotProps">
-        <div class="row">
-          <input type="text" class="w-100"
+        <div class="df-row">
+          <input type="text" class="df-w-100"
             :disabled="disabled"
             :id="value.possible_answers[0].id"
             :name="`A${value.possible_answers[0].id}`"
             v-model.trim="inputText"
             @input="handleInputChange()"
           >
-          <p v-if="value.possible_answers[0].text" class="label pl-1" style="padding-top: 2px; white-space: nowrap;">[{{ value.possible_answers[0].text }}]</p>
+          <p v-if="value.possible_answers[0].text" class="df-label df-pl-1" style="padding-top: 2px; white-space: nowrap;">[{{ value.possible_answers[0].text }}]</p>
         </div>
-        <p class="small text-danger mb-0">{{ slotProps.errors.join(' ') }}</p>
+        <p class="df-small df-td df-mb-0">{{ slotProps.errors.join(' ') }}</p>
       </validation-provider>
     </div>
   </label>
@@ -65,6 +65,7 @@ export default {
   methods: {
     handleInputChange () {
       this.value.possible_answers_selected[0].data = this.inputText
+      this.$emit('input', this.value)
     }
   }
 }

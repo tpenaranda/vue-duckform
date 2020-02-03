@@ -1,24 +1,21 @@
 <template>
-  <label>
-    <range-slider class="slider"
-      min="1"
+  <label class="df-scale">
+    <range-slider
+      :disabled="disabled"
       :max="value.possible_answers.length"
+      min="1"
       step="1"
-      v-model="selectedId"
-      :disabled="disabled">
+      v-model="selectedId">
     </range-slider>
-
-    <div class="selection">
-      <div class="w-25 small text-left">{{ value.possible_answers[0].text }}</div>
-      <div class="w-50 text-center" style="">{{ selectedId }}</div>
-      <div class="w-25 small text-right">{{ value.possible_answers[value.possible_answers.length - 1].text }}</div>
+    <div class="df-selection">
+      <div class="df-w-25 df-small df-tl">{{ value.possible_answers[0].text }}</div>
+      <div class="df-w-50 df-tc" style="">{{ selectedId }}</div>
+      <div class="df-w-25 df-small df-tr">{{ value.possible_answers[value.possible_answers.length - 1].text }}</div>
     </div>
-
     <validation-provider :rules="{ 'required': value.required }" v-slot="{ errors }" :name="value.text">
       <input type="text" v-model="value.possible_answers_selected[0].data" style="display: none;">
-      <p class="text-danger small">{{ errors.join(' ') }}</p>
+      <p class="df-td df-small">{{ errors.join(' ') }}</p>
     </validation-provider>
-
   </label>
 </template>
 
@@ -62,51 +59,9 @@ export default {
       },
       set (val) {
         this.value.possible_answers_selected = [{ id: this.value.possible_answers[val - 1].id, data: true }]
+        this.$emit('input', this.value)
       }
     }
   }
 }
 </script>
-<style lang="scss">
-  .selection {
-    display: flex;
-  }
-  .range-slider-inner {
-    min-width: 80px;
-  }
-  .range-slider {
-    box-sizing: border-box;
-    display: block;
-    height: 40px;
-    margin-bottom: 10px;
-    width: 100%;
-
-    .range-slider-knob {
-      background-color: #8ec0ed;
-      border: none;
-      height: 25px;
-      width: 25px;
-    }
-
-    input[type="text"] {
-      background: transparent;
-      border: none;
-      color: #004D50;
-      cursor: default;
-      font-size: 1rem;
-      padding-top: 40px;
-      text-align: center;
-      user-select: none;
-    }
-    .range-slider-fill {
-      background-color: #8ec0ed30;
-      border-radius: 25px;
-      height: 25px;
-    }
-    .range-slider-rail {
-      background-color: #e7e9e730;
-      border-radius: 25px;
-      height: 25px;
-    }
-}
-</style>

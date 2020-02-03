@@ -1,8 +1,8 @@
 <template>
-  <ul class="list-unstyled options mb-2" :class="`_${value.type}`">
+  <ul class="df-radio df-list-unstyled df-mb-2">
     <li v-for="(answer, answerIndex) in value.possible_answers" :key="answer.id">
-      <label class="row">
-        <div class="selector py-1">
+      <label class="df-row">
+        <div class="df-selector df-py-1">
           <input type="radio"
             :disabled="disabled"
             :id="`A${answer.id}`"
@@ -10,14 +10,14 @@
             @change="handleInputChange(answer.id)"
             :checked="selectedAnswerId === answer.id"
           >
-          <span class="radio marker"></span>
+          <span class="df-marker"></span>
         </div>
-        <span class="label pl-2 py-1">{{ answer.text }}</span>
+        <span class="df-pl-2 df-py-1">{{ answer.text }}</span>
       </label>
     </li>
     <validation-provider :rules="rules" v-slot="{ errors }" :name="value.text">
       <input type="text" v-model="value.possible_answers_selected" style="display: none;">
-      <p class="text-danger small">{{ errors.join(' ') }}</p>
+      <p class="df-td df-small">{{ errors.join(' ') }}</p>
     </validation-provider>
   </ul>
 </template>
@@ -57,41 +57,9 @@
     },
     methods: {
       handleInputChange (id) {
-        return this.value.possible_answers_selected = [{id: id, data: null}]
+        this.value.possible_answers_selected = [{id: id, data: null}]
+        this.$emit('input', this.value)
       }
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  $marker-size: 19px;
-
-  .selector {
-    display: inline-block;
-
-    input {
-      display: none;
-    }
-
-    .marker {
-      align-items: center;
-      border-radius: $marker-size;
-      border: 1px solid #adc0c480;
-      display: flex;
-      height: $marker-size;
-      justify-content: center;
-      position: relative;
-      transition-duration: .4s;
-      width: $marker-size;
-    }
-    input:checked ~ .marker {
-      background-color: #8ec0ed;
-      border-color: #8ec0ed;
-    }
-    label:hover {
-      .marker {
-        border-color: #adc0c4;
-      }
-    }
-  }
-</style>
