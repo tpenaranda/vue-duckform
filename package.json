@@ -1,6 +1,6 @@
 {
   "name": "vue-duckform",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "VueJS package to render a JS Object as a Form (Radio buttons, Checkboxes, Text Input, Scale Slider and Calendar input). Compatible with Laravel Duckform API.",
   "main": "dist/vue-duckform.umd.js",
   "module": "dist/vue-duckform.esm.js",
@@ -17,7 +17,6 @@
     "vue",
     "vuejs"
   ],
-  "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tpenaranda/vue-duckform.git"
@@ -44,7 +43,7 @@
   "bugs": {
     "url": "https://github.com/tpenaranda/vue-duckform/issues"
   },
-  "homepage": "https://github.com/tpenaranda/vue-duckform#readme",
+  "homepage": "https://vue-duckform-demo.tpenaranda.com",
   "scripts": {
     "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
     "build:es": "rollup --config build/rollup.config.js --format es --file dist/vue-duckform.esm.js",
