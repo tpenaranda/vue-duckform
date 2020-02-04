@@ -17,7 +17,7 @@ import Duckform from 'vue-duckform'
 Vue.component('Duckform', Duckform)
 ```
 
-### Usage with JS data (:warning: check demo site for formData format)
+### Usage with JS data (check demo site for formData format)
 ```js
 <duckform :form-data="formData" v-model="form"></duckform>
 
