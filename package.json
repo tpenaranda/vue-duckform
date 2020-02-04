@@ -1,6 +1,6 @@
 {
   "name": "vue-duckform",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "VueJS package to render a JS Object as a Form (Radio buttons, Checkboxes, Text Input, Scale Slider and Calendar input). Compatible with Laravel Duckform API.",
   "main": "dist/vue-duckform.umd.js",
   "module": "dist/vue-duckform.esm.js",
