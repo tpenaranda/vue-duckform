@@ -27,7 +27,7 @@
             </ul>
             <header>
               <p class="df-subtitle df-tc df-pb-4">{{ currentSection.title }}</p>
-              <p v-if="currentSection.description"><strong>{{ currentSection.description }}</strong></p>
+              <p class="df-section-description" v-if="currentSection.description"><strong>{{ currentSection.description }}</strong></p>
             </header>
             <section v-if="currentSection.questions && currentSection.questions.length">
               <fieldset v-for="(question, questionIndex) in currentSection.questions" :key="`S${currentSectionIndex}|Q${questionIndex}`">
@@ -319,7 +319,7 @@
         margin: 3px 0;
     }
 
-    header p strong {
+    header p.df-section-description {
       margin-left: 20px;
     }
 
