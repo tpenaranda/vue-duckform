@@ -62,7 +62,7 @@
               </fieldset>
             </section>
             <div v-else>
-              <p><strong>No questions defined on this section.</strong></p>
+              <p class="df-tc"><strong>No questions defined on this section.</strong></p>
             </div>
             <div v-if="!disabled" class="df-control">
               <div v-if="validationFailed && slotProps.invalid" class="df-small df-td df-mb-4">
@@ -224,7 +224,10 @@
           section.questions = _.keyBy(section.questions, 'id')
           return section
         }), 'slug')
-        this.form.sections = _.values(_.merge(formSectionsArranged, savedSectionsArranged))
+        this.form.sections = _.values(_.merge(formSectionsArranged, savedSectionsArranged)).map((section) => {
+          section.questions = _.values(section.questions)
+          return section
+        })
       },
       nextSection () {
         this.$refs.validationObserver.validate().then(success => {
