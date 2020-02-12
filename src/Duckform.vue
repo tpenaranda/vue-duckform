@@ -303,8 +303,8 @@
       border-left: 0;
       border-right: 0;
       border-top: 0;
-      padding: 0 0 25px 0;
-      margin: 10px 20px;
+      padding: 25px 0;
+      margin: 0 20px;
     }
 
     button {
@@ -324,6 +324,10 @@
 
     header p.df-section-description {
       margin-left: 20px;
+    }
+
+    ul {
+      margin-bottom: 0;
     }
 
     .df-title {
