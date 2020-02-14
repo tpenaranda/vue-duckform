@@ -16,7 +16,7 @@
     <div v-else>
       <validation-observer ref="validationObserver" v-slot="slotProps">
         <main class="df-content">
-          <slot name="completed" v-if="formSubmitted" v-bind:survey="form">
+          <slot name="completed" v-if="formSubmitted" v-bind:form="form">
             <p class="df-title df-tc">Thanks!</p>
             <p class="df-subtitle df-tc">Form is completed.</p>
           </slot>

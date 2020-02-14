@@ -57,6 +57,13 @@ submitId|Number/String|`null`|ID of a Form Submit to GET/PATCH/POST from "<formD
 disabled|boolean|`false`|Form inputs disabled
 value|Object|`{}`|Form object to bind to.
 
+### Slots
+**Name**|**Description**
+-----|-----
+loading|Content when API request is in progress
+errorLoading|Content after a non 2xx response from any API endpoint.
+completed|Content after form is completed.
+
 ### Events
 **Name**|**Parameters**|**Description**
 -----|-----|-----
