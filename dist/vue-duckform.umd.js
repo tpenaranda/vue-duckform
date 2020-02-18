@@ -523,7 +523,7 @@
                         }
                       ],
                       staticClass: "df-ml-2",
-                      attrs: { type: "text" },
+                      attrs: { type: "text", disabled: _vm.disabled },
                       domProps: { value: _vm.otherText },
                       on: {
                         input: [
