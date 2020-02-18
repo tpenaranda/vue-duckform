@@ -13,7 +13,7 @@
           <span class="df-marker"><img src="./../../assets/images/check.png" class="df-icon"></span>
         </div>
         <span v-if="answer.text.toLowerCase() === 'other' && isSelected(answer.id)" class="df-input">
-          <input class="df-ml-2" type="text" v-model="otherText" @input="setAnswerData(answer.id, otherText)">
+          <input class="df-ml-2" type="text" v-model="otherText" @input="setAnswerData(answer.id, otherText)" :disabled="disabled">
         </span>
         <span v-else class="df-label df-pl-2 df-py-1">{{ answer.text }}</span>
       </label>
