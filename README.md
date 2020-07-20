@@ -1,7 +1,7 @@
 ## vue-duckform
 Render a JS Object as a Form. Compatible with Laravel Duckform API.
 
-## Live demo [here](https://vue-duckform-demo.tpenaranda.com).
+## => [Live demo](https://vue-duckform-demo.tpenaranda.com) <=
 
 ### How to install
 ```bash
